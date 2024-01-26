@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="meeting_mt_type_vote_from_view" model="ir.ui.view">
+            <field name="name">meeting_mt_type_vote_from</field>
+            <field name="model">mt.type.vote</field>
+            <field name="arch" type="xml">
+                <form string="ประเภทการ Vote">
+                    <sheet>
+                        <group col="4" colspan="4">
+                            <field name="type_name"/>
+                            <field name="type_vote" widget="radio"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="meeting_mt_type_vote_tree_view" model="ir.ui.view">
+            <field name="name">meeting_mt_type_vote_tree</field>
+            <field name="model">mt.type.vote</field>
+            <field name="arch" type="xml">
+                <tree string="ประเภทการ Vote">
+                    <field name="type_name"/>
+                    <field name="type_vote"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="meeting_mt_type_vote_action" model="ir.actions.act_window">
+            <field name="name">ประเภทการ Vote</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mt.type.vote</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="meeting_mt_type_vote_menu" name="ประเภทการ Vote" parent="menu_meeting_master"
+                  action="meeting_mt_type_vote_action" sequence="4"/>
+    </data>
+</odoo>

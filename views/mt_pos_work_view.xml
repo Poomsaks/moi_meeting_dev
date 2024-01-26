@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="meeting_mt_pos_work_from_view" model="ir.ui.view">
+            <field name="name">meeting_mt_pos_work_from</field>
+            <field name="model">mt.pos.work</field>
+            <field name="arch" type="xml">
+                <form string="จัดการตำแหน่งที่ประชุม">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" groups="base.group_user" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": {
+                                    "string_true": "สถานะใช้งาน",
+                                    "hover_true": "สถานะไม่ใช้งาน",
+                                    "string_false": "สถานะไม่ใช้งาน",
+                                    "hover_false": "สถานะใช้งาน"
+                                }}'/>
+                            </button>
+                        </div>
+                        <group col="4" colspan="4">
+                            <field name="pos_no"/>
+                            <field name="pos_name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="meeting_mt_pos_work_tree_view" model="ir.ui.view">
+            <field name="name">meeting_mt_pos_work_tree</field>
+            <field name="model">mt.pos.work</field>
+            <field name="arch" type="xml">
+                <tree string="จัดการตำแหน่งที่ประชุม">
+                    <field name="pos_no"/>
+                    <field name="pos_name"/>
+                    <field name="active" widget="boolean_button" options='{"terminology": {
+                        "string_true": "สถานะใช้งาน",
+                        "hover_true": "‎",
+                        "string_false": "สถานะไม่ใช้งาน",
+                        "hover_false": "‎"
+                    }}'/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="meeting_mt_pos_work_action" model="ir.actions.act_window">
+            <field name="name">จัดการตำแหน่งที่ประชุม</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mt.pos.work</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="meeting_mt_pos_work_menu" name="จัดการตำแหน่งที่ประชุม" parent="menu_meeting_master"
+                  action="meeting_mt_pos_work_action" sequence="7"/>
+    </data>
+</odoo>

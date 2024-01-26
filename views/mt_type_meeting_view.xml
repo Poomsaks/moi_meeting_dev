@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="meeting_mt_type_meeting_from_view" model="ir.ui.view">
+            <field name="name">meeting_mt_type_meeting_from</field>
+            <field name="model">mt.type.meeting</field>
+            <field name="arch" type="xml">
+                <form string="ประเภทการประชุม">
+                    <sheet>
+                        <group col="4" colspan="4">
+                            <field name="type_code"/>
+                            <field name="type_name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="meeting_mt_type_meeting_tree_view" model="ir.ui.view">
+            <field name="name">meeting_mt_type_meeting_tree</field>
+            <field name="model">mt.type.meeting</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="type_code"/>
+                    <field name="type_name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="meeting_mt_type_meeting_action" model="ir.actions.act_window">
+            <field name="name">ประเภทการประชุม</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mt.type.meeting</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="meeting_mt_type_meeting_menu" name="ประเภทการประชุม" parent="menu_meeting_master"
+                  action="meeting_mt_type_meeting_action" sequence="6"/>
+    </data>
+</odoo>

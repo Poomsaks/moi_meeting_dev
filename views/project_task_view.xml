@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!--        List tree-->
+        <record id="task_project_task_view_tree" model="ir.ui.view">
+            <field name="name">task_project_task_tree</field>
+            <field name="model">project.task</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree decoration-bf="message_needaction==True" decoration-success="task_state=='close'"
+                      decoration-danger="date_deadline and (date_deadline&lt;current_date) and task_state!='close'"
+                      string="จัดการงาน">
+                    <field name="message_needaction" invisible="1"/>
+                    <field name="sequence" invisible="not context.get('seq_visible', False)"/>
+                    <field name="name" string="ชื่องาน"/>
+                    <field name="project_id" string="โครงการ" invisible="context.get('user_invisible', False)"/>
+                    <field name="user_id" invisible="context.get('user_invisible', False)"/>
+                    <field name="actual_start"/>
+                    <field name="actual_finish"/>
+                    <field name="date_deadline" string="กำหนดเสร็จ"/>
+                    <field name="task_state" invisible="context.get('set_visible',False)"/>
+                </tree>
+            </field>
+        </record>
+
+        <!--        Form-->
+        <record id="task_project_task_view_form" model="ir.ui.view">
+            <field name="name">task_project_task_form</field>
+            <field name="model">project.task</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="จัดการงาน" class="o_form_project_tasks">
+                    <header>
+                        <button name="action_assign_to_me" string="Assign to Me" type="object" class="oe_highlight"
+                                attrs="{'invisible' : [('user_id', '!=', False)]}"/>
+                        <button class="btn-primary" type="object" string="สร้างการประชุม" name="create_meeting"
+                                attrs="{'invisible': [('task_state', '=', 'close')]}"/>
+                        <field name="task_state" widget="statusbar" statusbar_visible="draft,process,waiting,close"
+                               options="{'clickable': '1', 'fold_field': 'fold'}"/>
+                    </header>
+                    <sheet string="Task">
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" icon="fa-tasks" type="object" name="action_open_parent_task"
+                                    string="Parent Task" attrs="{'invisible' : [('parent_id', '=', False)]}"/>
+                            <!--                        <button name="action_subtask" type="object" class="oe_stat_button" icon="fa-tasks" attrs="{'invisible' : [('parent_id', '!=', False)]}" context="{'project_id': subtask_project_id, 'name': name, 'partner_id': partner_id}" >-->
+                            <!--                            <field string="Sub-tasks" name="subtask_count" widget="statinfo"/>-->
+                            <!--                        </button>-->
+                            <button name="131" type="action" attrs="{'invisible': [('rating_count', '=', 0)]}"
+                                    class="oe_stat_button" icon="fa-smile-o" groups="project.group_project_rating">
+                                <field name="rating_count" string="Rating" widget="statinfo"/>
+                            </button>
+                            <button name="toggle_active" type="object" groups="base.group_user" class="oe_stat_button"
+                                    icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": {
+                                    "string_true": "สถานะใช้งาน",
+                                    "hover_true": "สถานะไม่ใช้งาน",
+                                    "string_false": "สถานะไม่ใช้งาน",
+                                    "hover_false": "สถานะใช้งาน"
+                                }}'/>
+                            </button>
+                            <button class="oe_stat_button" type="object" string="โครงการ" name="project_task"
+                                    attrs="{'invisible': [('project_id', '=', False)]}" icon="fa-folder-open"
+                                    options="{}"/>
+                            <button class="oe_stat_button" type="object" name="schedule_meeting" string="การประชุม"
+                                    icon="fa-calendar" attrs="{'invisible': [('meeting_id', '=', False)]}">
+                            </button>
+                        </div>
+                        <div class="oe_title pr-0">
+                            <h1 class="d-flex flex-row justify-content-between">
+                                <field name="priority" widget="priority" class="mr-3"/>
+                                <field name="name" class="o_task_name text-truncate" placeholder="Task Title..."/>
+                                <field name="kanban_state" widget="state_selection" class="ml-auto"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="project_id" string="โครงการ" domain="[('active', '=', True)]"/>
+                                <field name="meeting_id" options="{'no_create_edit': True, 'no_open': True}"/>
+                                <field name="user_id" class="o_task_user_field" options="{&quot;no_open&quot;: True}"/>
+                                <field name="legend_blocked" invisible="1"/>
+                                <field name="legend_normal" invisible="1"/>
+                                <field name="legend_done" invisible="1"/>
+                            </group>
+                            <group>
+                                <!--                            <field name="date_start"/>-->
+                                <field name="actual_start"/>
+                                <field name="actual_finish"/>
+                                <field name="date_deadline" string="กำหนดเสร็จ" required="1"/>
+                                <field name="task_hour"/>
+                                <field name="tag_ids" widget="many2many_tags"
+                                       options="{'color_field': 'color', 'no_create_edit': True}"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="description_page" string="รายละเอียด">
+                                <field name="description" type="html"/>
+                                <div class="oe_clear"/>
+                            </page>
+                            <page name="attach_page" string="แนบเอกสาร">
+                                <!--                                แนบเอกสาร-->
+                                <field name="task_attach_ids" nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="attachment_name"/>
+                                        <field name="attachment_file" filename="attachment_name" widget="FieldBinary"/>
+                                        <field name="attachment_import_date" readonly="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page name="extra_info" string="ข้อมูลเพิ่มเติม">
+                                <group>
+                                    <group>
+                                        <field name="sequence" groups="base.group_no_one"/>
+                                        <field name="partner_id" attrs="{'readonly': [('parent_id', '!=', False)]}"/>
+                                        <field name="email_from" attrs="{'readonly': [('parent_id', '!=', False)]}"/>
+                                        <field name="email_cc" groups="base.group_no_one"/>
+                                        <field name="parent_id"/>
+                                        <field name="child_ids" invisible="1"/>
+                                        <!--                                    <field name="subtask_project_id" invisible="1"/>-->
+                                        <field name="company_id" options="{'no_create': True}"/>
+                                        <field name="displayed_image_id" groups="base.group_no_one"/>
+                                    </group>
+                                    <group>
+                                        <field name="date_assign" groups="base.group_no_one"/>
+                                        <field name="date_last_stage_update" groups="base.group_no_one"/>
+                                    </group>
+                                    <group string="Working Time to Assign"
+                                           attrs="{'invisible': [('working_hours_open', '=', 0.0)]}">
+                                        <field name="working_hours_open" string="Hours"/>
+                                        <field name="working_days_open" string="Days"/>
+                                    </group>
+                                    <group string="Working Time to Close"
+                                           attrs="{'invisible': [('working_hours_close', '=', 0.0)]}">
+                                        <field name="working_hours_close" string="Hours"/>
+                                        <field name="working_days_close" string="Days"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="task_project_task_view_action" model="ir.actions.act_window">
+            <field name="name">จัดการงาน</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">project.task</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('user_id', '=', uid)]</field>
+        </record>
+
+        <record id="action_all_task_tree" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="task_project_task_view_action"/>
+            <field name="view_id" ref="task_project_task_view_tree"/>
+            <field name="view_mode">tree</field>
+            <field name="sequence">2</field>
+        </record>
+
+        <record id="action_all_task_form" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="task_project_task_view_action"/>
+            <field name="view_id" ref="task_project_task_view_form"/>
+            <field name="view_mode">form</field>
+            <field name="sequence">3</field>
+        </record>
+
+        <menuitem id="menu_task_list" name="จัดการงาน" parent="main_menu_task"
+                  action="task_project_task_view_action"
+                  sequence="1"/>
+
+    </data>
+</odoo>
+

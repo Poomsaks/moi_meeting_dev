@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="meeting_mt_work_group_from_view" model="ir.ui.view">
+            <field name="name">meeting_mt_work_group_from</field>
+            <field name="model">mt.work.group</field>
+            <field name="arch" type="xml">
+                <form string="จัดการคณะกรรมการ">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button"
+                                    icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": {
+                                    "string_true": "สถานะใช้งาน",
+                                    "hover_true": "สถานะไม่ใช้งาน",
+                                    "string_false": "สถานะไม่ใช้งาน",
+                                    "hover_false": "สถานะใช้งาน"
+                                }}'/>
+                            </button>
+                        </div>
+
+                        <div class="oe_edit_only">
+                            <label for="work_group_name"/>
+                        </div>
+                        <h1>
+                            <field name="work_group_name"/>
+                        </h1>
+
+                        <div class="oe_edit_only">
+                            <label for="work_group_last_mame"/>
+                        </div>
+                        <h1>
+                            <field name="work_group_last_mame"/>
+                        </h1>
+
+                        <group col="4" colspan="4">
+                            <field name="work_group_doc"/>
+                            <field name="work_group_type" widget="radio"/>
+                            <field name="position_id"/>
+                        </group>
+                        <notebook>
+                            <page string="วาระการประชุม" name="agenda">
+                                <field name="agenda_ids">
+                                    <tree editable="bottom">
+                                        <field name="agenda_no"/>
+                                        <field name="agenda_id"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="รายชื่อสมาชิก" name="partner">
+                                <field name="personal_ids">
+                                    <tree editable="bottom">
+                                        <field name="personal_id"/>
+                                        <field name="personal_pos"/>
+                                        <field name="pos_work_id"/>
+                                        <field name="pos_work_no" invisible="1"/>
+                                        <field name="personal_email"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <!--                            <page string="Admin ดูและห้องประชุม" name="admin">-->
+                            <!--                            </page>-->
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="meeting_mt_work_group_tree_view" model="ir.ui.view">
+            <field name="name">meeting_mt_work_group_tree</field>
+            <field name="model">mt.work.group</field>
+            <field name="arch" type="xml">
+                <tree string="จัดการคณะกรรมการ">
+                    <field name="work_group_name"/>
+                    <field name="work_group_doc"/>
+                    <field name="work_group_type"/>
+                    <field name="active" widget="boolean_button" options='{"terminology": {
+                        "string_true": "สถานะใช้งาน",
+                        "hover_true": "‎",
+                        "string_false": "สถานะไม่ใช้งาน",
+                        "hover_false": "‎"
+                    }}'/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="meeting_mt_work_group_action" model="ir.actions.act_window">
+            <field name="name">จัดการคณะกรรมการ</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mt.work.group</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="meeting_mt_work_group_menu" name="จัดการคณะกรรมการ" parent="menu_meeting_master"
+                  action="meeting_mt_work_group_action" sequence="9"/>
+    </data>
+</odoo>

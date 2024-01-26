@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--  meeting-->
+    <menuitem id="main_menu_meeting" name="ระบบบริหารจัดการห้องประชุม" sequence="1"
+              web_icon="odoo_thai_meeting,static/description/meeting.png"/>
+
+    <!--  ข้อมูล(Master)  -->
+    <menuitem id="menu_meeting_master" name="ข้อมูลพื้นฐาน" sequence="1"
+              parent="main_menu_meeting" />
+
+    <menuitem id="menu_meeting_res_partner" name="รายชื่อ" sequence="2"
+              parent="menu_meeting_master"/>
+
+ <!--  ก่อนการประชุม  -->
+    <menuitem id="main_menu_before_meeting" name="ก่อนการประชุม" sequence="4"
+              parent="main_menu_meeting"/>
+
+    <menuitem id="main_menu_before_meeting_1" name="ผู้ดูแลการประชุม" sequence="4"
+              parent="main_menu_before_meeting"/>
+
+    <menuitem id="main_menu_task" name="งานที่ได้รับมอบหมาย" sequence="5"
+              parent="main_menu_meeting"/>
+    <menuitem id="main_menu_task_project" name="โครงการ" sequence="3"
+              parent="main_menu_task" action="project.open_view_project_all_config"/>
+
+</odoo>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="meeting_mt_board_list_form_view" model="ir.ui.view">
+            <field name="name">meeting_mt_board_list_form</field>
+            <field name="model">mt.board.list</field>
+            <field name="arch" type="xml">
+                <form string="จัดการรายชื่อคณะกรรมการ" duplicate="0">
+                    <sheet>
+                        <group>
+                            <field name="partner_id"/>
+                        </group>
+                        <group col="4" colspan="4">
+<!--                            <field name="firstname"/>-->
+                            <field name="display_name"/>
+                            <field name="personal_pos"/>
+                            <field name="affiliation"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="meeting_mt_board_list_tree_view" model="ir.ui.view">
+            <field name="name">meeting_mt_board_list_tree</field>
+            <field name="model">mt.board.list</field>
+            <field name="arch" type="xml">
+                <tree string="จัดการรายชื่อคณะกรรมการ">
+<!--                    <field name="firstname"/>-->
+                    <field name="display_name"/>
+                    <field name="personal_pos"/>
+                    <field name="affiliation"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="meeting_mt_board_list_action" model="ir.actions.act_window">
+            <field name="name">จัดการรายชื่อคณะกรรมการ</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mt.board.list</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="meeting_mt_board_list_menu" name="จัดการรายชื่อคณะกรรมการ" parent="menu_meeting_master"
+                  action="meeting_mt_board_list_action" sequence="1"/>
+    </data>
+</odoo>

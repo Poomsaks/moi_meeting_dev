@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="product_uom_form_view" model="ir.ui.view">
+            <field name="name">uom.uom.form</field>
+            <field name="model">uom.uom</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <form string="Units of Measure">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" groups="base.group_user" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": {
+                                    "string_true": "สถานะใช้งาน",
+                                    "hover_true": "สถานะไม่ใช้งาน",
+                                    "string_false": "สถานะไม่ใช้งาน",
+                                    "hover_false": "สถานะใช้งาน"
+                                }}'/>
+                            </button>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="meeting_mt_equipment_from_view" model="ir.ui.view">
+            <field name="name">meeting_mt_equipment_from</field>
+            <field name="model">mt.equipment</field>
+            <field name="arch" type="xml">
+                <form string="จัดการอุปกรณ์การประชุม">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" groups="base.group_user" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": {
+                                    "string_true": "สถานะใช้งาน",
+                                    "hover_true": "สถานะไม่ใช้งาน",
+                                    "string_false": "สถานะไม่ใช้งาน",
+                                    "hover_false": "สถานะใช้งาน"
+                                }}'/>
+                            </button>
+                        </div>
+                        <group col="4" colspan="4">
+                            <field name="equip_name"/>
+                            <field name="equip_brand"/>
+                            <field name="equip_quantity"/>
+                            <field name="equip_unit"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="meeting_mt_equipment_tree_view" model="ir.ui.view">
+            <field name="name">meeting_mt_equipment_tree</field>
+            <field name="model">mt.equipment</field>
+            <field name="arch" type="xml">
+                <tree string="จัดการอุปกรณ์การประชุม">
+                    <field name="equip_name"/>
+                    <field name="equip_brand"/>
+                    <field name="equip_quantity"/>
+                    <field name="equip_unit"/>
+                    <field name="active" widget="boolean_button" options='{"terminology": {
+                        "string_true": "สถานะใช้งาน",
+                        "hover_true": "‎",
+                        "string_false": "สถานะไม่ใช้งาน",
+                        "hover_false": "‎"
+                    }}'/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="meeting_mt_equipment_action" model="ir.actions.act_window">
+            <field name="name">จัดการอุปกรณ์การประชุม</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mt.equipment</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="meeting_mt_equipment_menu" name="จัดการอุปกรณ์การประชุม" parent="menu_meeting_master"
+                  action="meeting_mt_equipment_action" sequence="2"/>
+    </data>
+</odoo>

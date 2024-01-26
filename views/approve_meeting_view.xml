@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Define the tree view -->
+        <record id="approve_meeting_calendar_event_view_tree" model="ir.ui.view">
+            <field name="name">approve_meeting_calendar_event_tree</field>
+            <field name="model">calendar.event</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="ห้องประชุมที่อนุมัติแล้ว">
+                    <field name="meeting_state"/>
+                    <field name="partner_id" string="ชื่อผู้ขอใช้"/>
+                    <field name="start_datetime" string="ตั้งแต่วันที่"/>
+                    <field name="end_datetime" string="ถึงวันที่"/>
+                    <field name="name" string="ชื่อการประชุม"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Define the form view -->
+        <record id="approve_meeting_calendar_event_view_form" model="ir.ui.view">
+            <field name="name">approve_meeting_calendar_event_form</field>
+            <field name="model">calendar.event</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="meeting_state"/>
+                    <field name="partner_id" string="ชื่อผู้ขอใช้"/>
+                    <field name="start_datetime" string="ตั้งแต่วันที่"/>
+                    <field name="end_datetime" string="ถึงวันที่"/>
+                    <field name="name" string="ชื่อการประชุม"/>
+                </form>
+            </field>
+        </record>
+
+        <!-- Define the action -->
+        <record id="approve_meeting_calendar_event_view_action" model="ir.actions.act_window">
+            <field name="name">ห้องประชุมที่อนุมัติแล้ว</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">calendar.event</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Attach views to actions -->
+        <record id="action_all_approve_meeting_tree" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="approve_meeting_calendar_event_view_action"/>
+            <field name="view_id" ref="approve_meeting_calendar_event_view_tree"/>
+            <field name="view_mode">tree</field>
+            <field name="sequence">2</field>
+        </record>
+
+        <record id="action_all_approve_meeting_form" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="approve_meeting_calendar_event_view_action"/>
+            <field name="view_id" ref="approve_meeting_calendar_event_view_form"/>
+            <field name="view_mode">form</field>
+            <field name="sequence">3</field>
+        </record>
+
+        <!-- Define menu item -->
+        <menuitem id="menu_approve_meeting_room" name="ห้องประชุมที่อนุมัติแล้ว"
+                  parent="main_menu_before_meeting_1" action="approve_meeting_calendar_event_view_action" sequence="4"/>
+    </data>
+</odoo>
+
+
+
+
+
+
+<!--        <record id="approve_meeting_calendar_event_view_form" model="ir.ui.view">-->
+<!--            <field name="name">approve_meeting_calendar_event_form</field>-->
+<!--            <field name="model">calendar.event</field>-->
+<!--            <field name="type">form</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <form>-->
+<!--                    <header>-->
+<!--                        <button name="button_copy_meeting_nextday" type="object" attrs="{'invisible': [('meeting_state', '=', 'draft')]}" string="คัดลอก ไปวันถัดไป" class="oe_highlight" confirm="ยืนยันคัดลอก ไปวันถัดไป?" options="{}"/>-->
+<!--                        <button name="do_meeting" type="object" string="ระหว่างประชุม" class="oe_highlight" confirm="ยืนยันสถานะระหว่างประชุม ใช่หรือไม่?" attrs="{'invisible':[('meeting_state','=', 'ip')]}"/>-->
+<!--                        <field name="meeting_state" widget="statusbar" statusbar_visible="draft,wp,ap,ip,summary,sp"/>-->
+<!--                    </header>-->
+<!--                    <sheet>-->
+<!--                        <div class="oe_button_box" name="button_box">-->
+<!--                            <button class="oe_stat_button" type="object" string="โครงการ" name="project_meeting" attrs="{'invisible': [('project_id', '=', False)]}" icon="fa-folder-open" options="{}"/>-->
+<!--                            <button class="oe_stat_button" type="object" name="all_task_serie_meeting" icon="fa-tasks" options="{}">-->
+<!--                                <field string="งานทั้งหมด" name="all_task_count" widget="statinfo"/>-->
+<!--                            </button>-->
+<!--                            <button class="oe_stat_button" type="object" name="in_process_task_serie_meeting" icon="fa-tasks" options="{}" >-->
+<!--                                 <field string="งานที่ยังไม่ปิด" name="in_process_task_count" widget="statinfo"/>-->
+<!--                            </button>-->
+<!--&lt;!&ndash;                            <button string="Document" class="oe_stat_button float-right" icon="fa-bars" type="object" name="action_open_calendar_event" attrs="{'invisible': ['|', ('res_model', '=', False), ('res_id', '=', False)]}" options="{}"/>&ndash;&gt;-->
+<!--                            <field name="res_model" invisible="1"/>-->
+<!--                            <field name="res_id" invisible="1"/>-->
+<!--&lt;!&ndash;                            <field name="state" invisible="1"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <field name="is_attendee" invisible="1"/>&ndash;&gt;-->
+<!--                            <field name="attendee_status" invisible="1"/>-->
+<!--                        </div>-->
+<!--                        <div class="oe_title">-->
+<!--                            <h1>-->
+<!--                                <field name="name" readonly="1"/>-->
+<!--                            </h1>-->
+<!--                        </div>-->
+<!--                        <group>-->
+<!--                            <group col="4" colspan="4">-->
+<!--&lt;!&ndash;                                <field name="team_flag" string="Add Team Meeting" attrs="{'readonly':[('id','!=',False)]}"/>&ndash;&gt;-->
+<!--                                <field name="root_meeting_id" readonly="1"/>-->
+<!--                                <field name="parent_id" options="{'no_create_edit': True, 'no_open': True}" domain="[('id', 'not in', active_ids)]" readonly="1"/>-->
+<!--                                <field name="meeting_no" readonly="1"/>-->
+<!--                                <field name="work_group_id" options="{'no_create_edit': True, 'no_open': True}" readonly="1"/>-->
+<!--                                <field name="type_id" options="{'no_create_edit': True, 'no_open': True}" readonly="1"/>-->
+<!--                                <field name="project_id" options="{'no_create_edit': True, 'no_open': True}" attrs="{'readonly': [('parent_id', '!=', False)]}" readonly="1"/>-->
+<!--                                <field name="president_id" options="{'no_create_edit': True, 'no_open': True}" attrs="{'readonly': [('parent_id', '!=', False)]}" readonly="1"/>-->
+<!--                                <field name="contact_person"/>-->
+<!--                                <field name="contact_number"/>-->
+<!--                                <field name="meeting_no" invisible="1"/>-->
+<!--                                <field name="root_meeting_id" invisible="1"/>-->
+<!--                                <field name="project_id" invisible="1"/>-->
+<!--                            </group>-->
+<!--                        </group>-->
+
+<!--                        <label for="partner_ids" string="ผู้เข้าร่วม" class="oe_edit_only"/>-->
+<!--                        <h2>-->
+<!--                            <field name="partner_ids" widget="many2manyattendee" placeholder="Select attendees..." context="{'force_email':True}" class="oe_inline" readonly="1"/>-->
+<!--                        </h2>-->
+<!--                        <label for="description"/>-->
+<!--                        <field name="description"/>-->
+<!--                        <notebook>-->
+<!--                            <page name="page_details" string="กำหนดการ">-->
+<!--                                <group attrs="{'invisible': [('recurrency','==',False)]}" class="oe_edit_only ">-->
+<!--&lt;!&ndash;                                    <p class="alert alert-warning" role="status"> This event is linked to a recurrence...<br/>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <button type="object" name="action_detach_recurring_event" string="Update only this instance" help="Click here to update only this instance and not all recurrences. " class="oe_link"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </p>&ndash;&gt;-->
+<!--                                </group>-->
+<!--                                <group>-->
+<!--                                    <group>-->
+<!--                                        <field name="start" attrs="{'invisible': True}"/>-->
+<!--                                        <field name="stop" attrs="{'invisible': True}"/>-->
+<!--                                        <field name="id" attrs="{'invisible': True}"/>-->
+
+<!--                                        <field name="start_date" string="วันที่เริ่ม" attrs="{'required': [('allday','=',True)], 'invisible': [('allday','=',False)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}" force_save="1"/>-->
+<!--                                        <field name="stop_date" string="ถึงวันที่" attrs="{'required': [('allday','=',True)],'invisible': [('allday','=',False)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}" force_save="1"/>-->
+
+<!--                                        <field name="start_datetime" string="วันที่เริ่ม" attrs="{'required': [('allday','=',False)], 'invisible': [('allday','=',True)]}" readonly="1"/>-->
+<!--&lt;!&ndash;                                        <field name="end_datetime" attrs="{'required':[('team_flag','=',True)]}" readonly="1" string="ถึงวันที่" />&ndash;&gt;-->
+<!--                                        <label for="duration" attrs="{'invisible': [('allday','=',True)]}"/>-->
+<!--                                        <div attrs="{'invisible': [('allday','=',True)]}">-->
+<!--                                            <field name="duration" widget="float_time" string="Duration" class="oe_inline" readonly="1"/>-->
+<!--                                            <span> hours</span>-->
+<!--                                        </div>-->
+<!--                                        <field name="allday" readonly="1"/>-->
+<!--                                    </group>-->
+<!--                                    <group>-->
+<!--                                        <field name="categ_ids" widget="many2many_tags" options="{'no_create_edit': True}"/>-->
+<!--                                        <field name="alarm_ids" widget="many2many_tags" string="การแจ้งเตือน"/>-->
+<!--                                        <field name="location" invisible="1"/>-->
+<!--                                    </group>-->
+<!--                                </group>-->
+<!--                                <group>-->
+<!--                                    <group>-->
+<!--                                        <field name="room_id" options="{'no_create_edit': True, 'no_open': True}" readonly="1"/>-->
+<!--                                        <field name="room_admin_id" />-->
+<!--                                    </group>-->
+<!--                                    <group>-->
+<!--                                        <field name="join_inside"/>-->
+<!--                                        <field name="join_outside"/>-->
+<!--                                        <field name="join_count"/>-->
+<!--                                    </group>-->
+<!--                                </group>-->
+<!--                                <notebook>-->
+<!--                                    <page string="อุปกรณ์การประชุม" name="equipment">-->
+<!--                                        <field name="equipment_ids" readonly="0">-->
+<!--                                            <tree editable="bottom">-->
+<!--                                                <field name="equipment_id"/>-->
+<!--                                                <field name="equipment_unit"/>-->
+<!--                                                <field name="equipment_qty"/>-->
+<!--                                            </tree>-->
+<!--                                        </field>-->
+<!--                                    </page>-->
+<!--                                    <page string="บริการการประชุม" name="service">-->
+<!--                                        <field name="service_ids" readonly="0">-->
+<!--                                            <tree editable="bottom">-->
+<!--                                                <field name="service_id"/>-->
+<!--                                                <field name="service_unit"/>-->
+<!--                                                <field name="qty_morning"/>-->
+<!--                                                <field name="qty_afternoon"/>-->
+<!--                                                <field name="service_qty"/>-->
+<!--                                                <field name="sum_qty"/>-->
+<!--                                            </tree>-->
+<!--                                        </field>-->
+<!--                                    </page>-->
+<!--                                    &lt;!&ndash;                            <page string="Admin ดูและห้องประชุม" name="admin">&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                            </page>&ndash;&gt;-->
+<!--                                </notebook>-->
+<!--                            </page>-->
+
+<!--                            <page string="วาระการประชุม" name="agenda">-->
+<!--                                <field name="agenda_ids">-->
+<!--                                    <tree>-->
+<!--                                        <field name="agenda_no"/>-->
+<!--                                        <field name="agenda_name"/>-->
+<!--                                    </tree>-->
+<!--                                    <form>-->
+<!--                                        <group>-->
+<!--                                            <group>-->
+<!--                                                <field name="agenda_no"/>-->
+<!--                                            </group>-->
+<!--                                        </group>-->
+<!--                                        <group>-->
+<!--                                            <field name="agenda_name"/>-->
+<!--                                            <field name="agenda_detail"/>-->
+<!--                                        </group>-->
+
+<!--        &lt;!&ndash;                                แนบเอกสาร&ndash;&gt;-->
+<!--                                        <group>-->
+<!--                                            <field name="agenda_attach_ids">-->
+<!--                                                <tree editable="bottom">-->
+<!--                                                    <field name="attachment_name"/>-->
+<!--                                                    <field name="attachment_file" filename="attachment_name" widget="FieldBinary"/>-->
+<!--                                                    <field name="attachment_import_date" readonly="1"/>-->
+<!--                                                </tree>-->
+<!--                                            </field>-->
+<!--                                        </group>-->
+<!--        &lt;!&ndash;                                แนบ URL&ndash;&gt;-->
+<!--                                        <group>-->
+<!--                                            <field name="agenda_url_ids">-->
+<!--                                                <tree editable="bottom">-->
+<!--                                                    <field name="url_name"/>-->
+<!--                                                </tree>-->
+<!--                                            </field>-->
+<!--                                        </group>-->
+<!--                                        <notebook>-->
+<!--                                            <page string="วาระการประชุมย่อย" name="sub_agenda">-->
+<!--                                                <field name="sub_agenda_ids">-->
+<!--                                                    <tree>-->
+<!--                                                        <field name="sub_agenda_no"/>-->
+<!--                                                        <field name="sub_agenda_name"/>-->
+<!--                                                    </tree>-->
+<!--                                                    <form>-->
+<!--                                                       <group>-->
+<!--                                                            <group>-->
+<!--                                                                <field name="sub_agenda_no"/>-->
+<!--                                                            </group>-->
+<!--                                                        </group>-->
+<!--                                                        <group>-->
+<!--                                                            <field name="sub_agenda_name"/>-->
+<!--                                                            <field name="sub_agenda_detail"/>-->
+<!--                                                        </group>-->
+<!--                    &lt;!&ndash;                                แนบเอกสาร&ndash;&gt;-->
+<!--                                                        <group>-->
+<!--                                                            <field name="sub_agenda_attach_ids">-->
+<!--                                                                <tree editable="bottom">-->
+<!--                                                                    <field name="attachment_name"/>-->
+<!--                                                                    <field name="attachment_file" filename="attachment_name" widget="FieldBinary"/>-->
+<!--                                                                    <field name="attachment_import_date" readonly="1"/>-->
+<!--                                                                </tree>-->
+<!--                                                            </field>-->
+<!--                                                        </group>-->
+<!--                    &lt;!&ndash;                                แนบ URL&ndash;&gt;-->
+<!--                                                        <group>-->
+<!--                                                            <field name="sub_agenda_url_ids">-->
+<!--                                                                <tree editable="bottom">-->
+<!--                                                                    <field name="url_name"/>-->
+<!--                                                                </tree>-->
+<!--                                                            </field>-->
+<!--                                                        </group>-->
+<!--                                                    </form>-->
+<!--                                                </field>-->
+<!--                                            </page>-->
+<!--                                        </notebook>-->
+<!--                                    </form>-->
+<!--                                </field>-->
+<!--                            </page>-->
+
+<!--                            &lt;!&ndash;                        Task&ndash;&gt;-->
+<!--                            <page string="มอบหมายงาน">-->
+<!--                                    <field name="task_ids" nolabel="1" context="{'default_meeting_id': id, 'default_project_id': project_id}">-->
+<!--                                        <tree decoration-bf="message_needaction==True" decoration-success="task_state=='close'" decoration-danger="date_deadline and (date_deadline&lt;current_date) and task_state!='close'" string="Tasks">-->
+<!--                                            <field name="message_needaction" invisible="1"/>-->
+<!--                                            <field name="sequence" invisible="not context.get('seq_visible', False)"/>-->
+<!--                                            <field name="name" string="ชื่องาน"/>-->
+<!--                                            <field name="user_id" invisible="context.get('user_invisible', False)"/>-->
+<!--                                            <field name="actual_start"/>-->
+<!--                                            <field name="date_deadline" string="กำหนดเสร็จ"/>-->
+<!--                                            <field name="task_state" invisible="context.get('set_visible',False)"/>-->
+<!--                                        </tree>-->
+<!--                                        <form>-->
+<!--                                            <div class="oe_title pr-0">-->
+<!--                                                <h1 class="d-flex flex-row justify-content-between">-->
+<!--                                                    <field name="priority" widget="priority" class="mr-3"/>-->
+<!--                                                    <field name="name" class="o_task_name text-truncate" placeholder="Task Title..."/>-->
+<!--                                                    <field name="kanban_state" widget="state_selection" class="ml-auto"/>-->
+<!--                                                </h1>-->
+<!--                                            </div>-->
+<!--                                            <group>-->
+<!--                                                <group>-->
+<!--                                                    <field name="project_id" domain="[('active', '=', True)]" readonly="1"/>-->
+<!--                                                    <field name="meeting_id" options="{'no_create_edit': True, 'no_open': True}" readonly="1"/>-->
+<!--                                                    <field name="user_id" class="o_task_user_field" options="{&quot;no_open&quot;: True}"/>-->
+<!--                                                    <field name="legend_blocked" invisible="1"/>-->
+<!--                                                    <field name="legend_normal" invisible="1"/>-->
+<!--                                                    <field name="legend_done" invisible="1"/>-->
+<!--                                                </group>-->
+<!--                                                <group>-->
+<!--                                                    <field name="actual_start"/>-->
+<!--                                                    <field name="date_deadline" string="กำหนดเสร็จ"/>-->
+<!--                                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>-->
+<!--                                                    <field name="task_state"/>-->
+<!--                                                    <field name="project_id" invisible="1"/>-->
+<!--                                                </group>-->
+<!--                                            </group>-->
+<!--                                            <notebook>-->
+<!--                                                <page name="description_page" string="Description">-->
+<!--                                                    <field name="description" type="html"/>-->
+<!--                                                    <div class="oe_clear"/>-->
+<!--                                                </page>-->
+<!--                                                <page name="extra_info" string="Extra Info">-->
+<!--                                                    <group>-->
+<!--                                                        <group>-->
+<!--                                                            <field name="sequence" groups="base.group_no_one"/>-->
+<!--                                                            <field name="partner_id"/>-->
+<!--                                                            <field name="email_from"/>-->
+<!--                                                            <field name="email_cc" groups="base.group_no_one"/>-->
+<!--    &lt;!&ndash;                                                        <field name="parent_id" attrs="{'invisible' : [('subtask_count', '&gt;', 0)]}" groups="project.group_subtask_project"/>&ndash;&gt;-->
+<!--                                                            <field name="child_ids" invisible="1"/>-->
+<!--&lt;!&ndash;                                                            <field name="subtask_project_id" invisible="1"/>&ndash;&gt;-->
+<!--                                                            <field name="company_id" options="{'no_create': True}"/>-->
+<!--                                                            <field name="displayed_image_id" groups="base.group_no_one"/>-->
+<!--                                                        </group>-->
+<!--                                                        <group>-->
+<!--                                                            <field name="date_assign" groups="base.group_no_one"/>-->
+<!--                                                            <field name="date_last_stage_update" groups="base.group_no_one"/>-->
+<!--                                                        </group>-->
+<!--                                                        <group string="Working Time to Assign" attrs="{'invisible': [('working_hours_open', '=', 0.0)]}">-->
+<!--                                                            <field name="working_hours_open" string="Hours"/>-->
+<!--                                                            <field name="working_days_open" string="Days"/>-->
+<!--                                                        </group>-->
+<!--                                                        <group string="Working Time to Close" attrs="{'invisible': [('working_hours_close', '=', 0.0)]}">-->
+<!--                                                            <field name="working_hours_close" string="Hours"/>-->
+<!--                                                            <field name="working_days_close" string="Days"/>-->
+<!--                                                        </group>-->
+<!--                                                    </group>-->
+<!--                                                </page>-->
+<!--                                            </notebook>-->
+<!--                                        </form>-->
+<!--                                    </field>-->
+<!--                                </page>-->
+<!--                            <page name="page_options" string="Options" invisible="1">-->
+<!--                                <group>-->
+<!--                                    <div>-->
+<!--                                        <group>-->
+<!--                                            <field name="recurrency"/>-->
+<!--                                        </group>-->
+<!--                                        <div attrs="{'invisible': [('recurrency', '=', False)]}">-->
+<!--                                            <group>-->
+<!--                                                <label for="interval"/>-->
+<!--                                                <div class="o_row">-->
+<!--                                                    <field name="interval" attrs="{'required': [('recurrency', '=', True)]}"/>-->
+<!--                                                    <field name="rrule_type" attrs="{'required': [('recurrency', '=', True)]}"/>-->
+<!--                                                </div>-->
+<!--                                                <label string="Until" for="end_type"/>-->
+<!--                                                <div class="o_row">-->
+<!--                                                    <field name="end_type" attrs="{'required': [('recurrency', '=', True)]}"/>-->
+<!--                                                    <field name="count" attrs="{'invisible': [('end_type', '!=', 'count')], 'required': [('recurrency', '=', True)]}"/>-->
+<!--&lt;!&ndash;                                                    <field name="final_date" attrs="{'invisible': [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date'), ('recurrency', '=', True)]}"/>&ndash;&gt;-->
+<!--                                                </div>-->
+<!--                                            </group>-->
+<!--&lt;!&ndash;                                            <group attrs="{'invisible': [('rrule_type', '!=', 'weekly')]}" name="weekdays">&ndash;&gt;-->
+<!--&lt;!&ndash;                                                <field name="mo"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                <field name="tu"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                <field name="we"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                <field name="th"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                <field name="fr"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                <field name="sa"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                <field name="su"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                                            </group>&ndash;&gt;-->
+<!--                                            <group attrs="{'invisible': [('rrule_type', '!=', 'monthly')]}">-->
+<!--                                                <label string="Day of Month" for="month_by"/>-->
+<!--                                                <div class="o_row">-->
+<!--                                                    <field name="month_by"/>-->
+<!--                                                    <field name="day" attrs="{'required': [('month_by', '=', 'date'), ('rrule_type', '=', 'monthly')],                                                             'invisible': [('month_by', '!=', 'date')]}"/>-->
+<!--                                                    <field name="byday" string="The" attrs="{'required': [('recurrency', '=', True), ('month_by', '=', 'day'), ('rrule_type', '=', 'monthly')],                                                             'invisible': [('month_by', '!=', 'day')]}"/>-->
+<!--&lt;!&ndash;                                                    <field name="week_list" nolabel="1" attrs="{'required': [('recurrency', '=', True), ('month_by', '=', 'day'), ('rrule_type', '=', 'monthly')],                                                             'invisible': [('month_by', '!=', 'day')]}"/>&ndash;&gt;-->
+<!--                                                </div>-->
+<!--                                            </group>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    <group>-->
+<!--                                        <field name="privacy"/>-->
+<!--                                        <field name="show_as"/>-->
+<!--&lt;!&ndash;                                        <field name="recurrent_id" invisible="1"/>&ndash;&gt;-->
+<!--                                    </group>-->
+<!--                                </group>-->
+<!--                            </page>-->
+
+<!--                            <page name="page_invitations" string="เชิญการประชุม">-->
+<!--                                <button name="action_sendmail" type="object" string="Send mail" icon="fa-envelope" class="oe_link" confirm="ยืนยันทำการส่งอีเมล์?"/>-->
+<!--                                <field name="attendee_ids" widget="one2many">-->
+<!--                                    <tree string="Invitation details" editable="top" create="false" delete="false">-->
+<!--                                        <field name="partner_id"/>-->
+<!--                                        <field name="is_instead_attendee"/>-->
+<!--                                        <field name="state"/>-->
+<!--                                        <field name="email" widget="email"/>-->
+<!--                                        <field name="declined_note"/>-->
+<!--                                        <field name="instead_partner_id"/>-->
+<!--                                        <button name="do_tentative" states="needsAction,instead,declined,accepted" string="ไม่แน่นอน" type="object" icon="fa-asterisk"/>-->
+<!--                                        <button name="do_instead" states="needsAction,do_tentative,declined,accepted" string="ให้ผู้อื่นเข้าร่วมประชุมแทน" type="object" icon="fa-exchange"/>-->
+<!--                                        <button name="do_accept" string="เข้าร่วมประชุม" states="needsAction,do_instead,tentative,declined" type="object" icon="fa-check text-success"/>-->
+<!--                                        <button name="do_decline" string="ไม่เข้าร่วมประชุม" states="needsAction,do_instead,tentative,accepted" type="object" icon="fa-times-circle text-danger"/>-->
+<!--                                    </tree>-->
+<!--                                </field>-->
+<!--                            </page>-->
+<!--                            <page name="page_misc" string="Misc" groups="base.group_no_one">-->
+<!--                                <group>-->
+<!--                                    <label for="user_id" string="Owner"/>-->
+<!--                                    <field name="user_id" nolabel="1" readonly="1" force_save="1"/>-->
+<!--                                    <field name="partner_id" readonly="0" force_save="1"/>-->
+<!--                                </group>-->
+<!--                            </page>-->
+<!--                        </notebook>-->
+<!--                        &lt;!&ndash; อัพโหลดเอกสาร &ndash;&gt;-->
+<!--                        <group string="อัพโหลดเอกสาร">-->
+<!--                            <field name="attach_ids" nolabel="1">-->
+<!--                                <tree editable="bottom">-->
+<!--                                    <field name="attachment_note"/>-->
+<!--                                    <field name="attachment_file" filename="attachment_name" widget="FieldBinary"/>-->
+<!--                                    <field name="attachment_name" readonly="1"/>-->
+<!--                                    <field name="attachment_import_date" readonly="1"/>-->
+<!--                                </tree>-->
+<!--                            </field>-->
+<!--                        </group>-->
+<!--                    </sheet>-->
+<!--                    <div class="oe_chatter">-->
+<!--                        <field name="message_follower_ids" widget="mail_followers"/>-->
+<!--                        <field name="message_ids" widget="mail_thread"/>-->
+<!--                    </div>-->
+<!--                </form>-->
+<!--            </field>-->
+<!--        </record>-->

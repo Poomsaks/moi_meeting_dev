@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="custom_project_project_tree" model="ir.ui.view">
+        <field name="name">custom.project.project.tree.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position = 'replace'>
+                <tree decoration-bf="message_needaction==True" decoration-muted="active == False" string="Projects">
+<!--                    <field name="sequence" widget="handle"/>-->
+<!--                    <field name="message_needaction" invisible="1"/>-->
+<!--                    <field name="active" invisible="1"/>-->
+<!--                    <field name="name" string="ชื่อโครงการ"/>-->
+<!--                    <field name="user_id" string="ผู้จัดการโครงการ"/>-->
+<!--                    <field name="date_start"/>-->
+<!--                    <field name="date_end" string="กำหนดเสร็จ"/>-->
+                    <field name="state"/>
+                </tree>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="custom_project_project_form" model="ir.ui.view">
+        <field name="name">custom.project.project.form.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+
+            <!--button 'create meeting'-->
+            <xpath expr="//header" position = 'replace'>
+                <header>
+<!--                    <button name="124" string="Share" type="action" class="oe_highlight oe_read_only"/>-->
+<!--                    <button class="btn-primary" type="object" string="สร้างการประชุม" name="create_meeting"/>-->
+<!--                    <field name="state" widget="statusbar" statusbar_visible="active,late,finish" options="{'clickable': '1', 'fold_field': 'fold'}"/>-->
+                </header>
+            </xpath>
+
+<!--            add fields-->
+<!--            <xpath expr="//group[@name='misc']" position = 'before'>-->
+<!--                <group col="4" colspan="4">-->
+<!--                    <field name="date_start"/>-->
+<!--                    <field name="date_end" string="กำหนดเสร็จ"/>-->
+<!--                </group>-->
+<!--            </xpath>-->
+
+
+<!--            hide task button-->
+            <xpath expr="//button[2]" position = 'attributes'>
+                 <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <!--oe_button for meeting-->
+<!--            <xpath expr="//div[@name='button_box']" position = 'inside'>-->
+<!--                <button class="oe_stat_button" type="object" name="all_task" icon="fa-tasks" options="{}">-->
+<!--                    <field string="งานทั้งหมด" name="all_task_count" widget="statinfo"/>-->
+<!--                </button>-->
+<!--                <button class="oe_stat_button" type="object" name="in_process_task" icon="fa-tasks" options="{}" >-->
+<!--                     <field string="งานที่ยังไม่ปิด" name="in_process_task_count" widget="statinfo"/>-->
+<!--                </button>-->
+<!--                <button class="oe_stat_button" type="object"-->
+<!--                            name="schedule_meeting"-->
+<!--                            icon="fa-calendar">-->
+<!--                            <field string="การประชุม" name="meeting_count" widget="statinfo"/>-->
+<!--                </button>-->
+<!--            </xpath>-->
+        </field>
+    </record>
+</odoo>
+

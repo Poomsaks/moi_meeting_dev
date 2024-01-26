@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="meeting_mt_room_from_view" model="ir.ui.view">
+            <field name="name">meeting_mt_room_from</field>
+            <field name="model">mt.room</field>
+            <field name="arch" type="xml">
+                <form string="จัดการห้องประชุม">
+                    <sheet>
+                        <group col="4" colspan="4">
+                             <field name="room_name"/>
+
+
+                            <field name="floor"/>
+                            <field name="people_in_room"/>
+                            <field name="room_address" string="อาคาร" />
+                            <field name="access_type"/>
+                            <field name="room_type_ids" widget="many2many_tags"/>
+                            <field name="meeting_link"/>
+                            <field name="meeting_id"/>
+                            <field name="meeting_pass_code"/>
+                            <field name="organize_id"/>
+                            <field name="organize_type"/>
+                            <field name="room_status"/>
+                            <field name="active"/>
+                            <field name="image" widget='image'/>
+                            <field name="equipment_ids"/>
+                            <field name="service_status"/>
+                            <field name="services_ids"/>
+
+                            <field name="meeting_color"/>
+                            <field name="type_meeting_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="meeting_mt_room_tree_view" model="ir.ui.view">
+            <field name="name">meeting_mt_room_tree</field>
+            <field name="model">mt.room</field>
+            <field name="arch" type="xml">
+                <tree string="จัดการห้องประชุม">
+                    <field name="room_name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="meeting_mt_room_action" model="ir.actions.act_window">
+            <field name="name">จัดการห้องประชุม</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mt.room</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="meeting_mt_room_menu" name="จัดการห้องประชุม" parent="menu_meeting_master"
+                  action="meeting_mt_room_action" sequence="3"/>
+    </data>
+</odoo>

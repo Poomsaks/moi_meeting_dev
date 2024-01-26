@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="room_type_view_form" model="ir.ui.view">
+            <field name="name">_view_form</field>
+            <field name="model">mt.room.type</field>
+            <field name="arch" type="xml">
+                <form string="ประเภทห้องประชุม">
+                    <sheet>
+                        <group>
+                            <field name="type_room"/>
+
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="room_type_view_tree" model="ir.ui.view">
+            <field name="name">_view_tree</field>
+            <field name="model">mt.room.type</field>
+            <field name="arch" type="xml">
+                <tree string="ประเภทห้องประชุม">
+                    <field name="type_room"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="room_type_action" model="ir.actions.act_window">
+            <field name="name">ประเภทห้องประชุม</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mt.room.type</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- This Menu Item must have a parent and an action -->
+        <menuitem id="room_type_menu" name="ประเภทห้องประชุม" parent="menu_meeting_master" action="room_type_action"
+                  sequence="7"/>
+
+
+    </data>
+</odoo>

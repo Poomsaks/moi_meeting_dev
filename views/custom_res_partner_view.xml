@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="custom_inherit_res_partner_tree" model="ir.ui.view">
+            <field name="name">custom.inherit.res.partner.tree</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='email']" position="after">
+                    <field name="personal_pos"/>
+                    <field name="affiliation"/>
+                    <!-- <field name="meeting_count"/> -->
+                </xpath>
+
+            </field>
+        </record>
+
+        <!-- Inherit Form View to Modify it -->
+        <record id="custom_inherit_res_partner_form" model="ir.ui.view">
+            <field name="name">custom.inherit.res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='parent_id']" position="attributes">
+                    <attribute name="placeholder">หน่วยงาน</attribute>
+                </xpath>
+                <xpath expr="//field[@name='vat']" position="after">
+                    <field name="personal_pos"/>
+                    <field name="affiliation"/>
+                </xpath>
+                <xpath expr="//field[@name='function']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//form/sheet/notebook/page[@name='internal_notes']" position="replace">
+                    <page name='internal_notes' string="หมายเหตุ">
+                        <field name="comment" placeholder="หมายเหตุ..."/>
+                    </page>
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page[@name='sales_purchases']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
+       <record id="custom_inherit_res_partner_filter" model="ir.ui.view">
+            <field name="name">custom.res.partner.select</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+                 <xpath expr="//search" position="replace">
+                    <search string="Search Partner">
+                       <field name="name"
+                           filter_domain="['|','|',('display_name','ilike',self),('ref','=',self),('email','ilike',self)]"/>
+                        <field name="phone" filter_domain="['|',('phone','ilike',self),('mobile','=',self)]"/>
+                        <field name="personal_pos"/>
+                        <field name="affiliation"/>
+                       <group expand="0" name="group_by" string="Group By">
+                           <filter name="salesperson" string="Salesperson" domain="[]" context="{'group_by' : 'user_id'}" />
+                           <filter name="group_company" string="Company" context="{'group_by': 'parent_id'}"/>
+                           <filter name="group_country" string="Country" context="{'group_by': 'country_id'}"/>
+                       </group>
+                   </search>
+                </xpath>
+
+
+<!--                <search string="Search Partner">-->
+<!--                   <field name="name"-->
+<!--                       filter_domain="['|','|',('display_name','ilike',self),('ref','=',self),('email','ilike',self)]"/>-->
+<!--                   <field name="parent_id" domain="[('is_company','=',True)]" operator="child_of"/>-->
+<!--                   <filter name="filter_my_partners" help="My Contacts"-->
+<!--                           domain="[('user_id','=',uid)]"/>-->
+<!--                   <separator/>-->
+<!--                   <filter string="Individuals" name="type_person" domain="[('is_company','=',False)]"/>-->
+<!--                   <filter string="Companies" name="type_company" domain="[('is_company','=',True)]"/>-->
+<!--                   <separator/>-->
+<!--                   <filter string="Customers" name="customer" domain="[('customer','=',True), ('parent_id', '=', False)]"/>-->
+<!--                   <filter string="Vendors" name="supplier" domain="[('supplier','=',True), ('parent_id', '=', False)]"/>-->
+<!--                   <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>-->
+<!--                   <separator/>-->
+<!--                   <field name="category_id" string="Tag" filter_domain="[('category_id','ilike', self)]"/>-->
+<!--                   <field name="user_id"/>-->
+<!--                   <field name="phone" filter_domain="['|',('phone','ilike',self),('mobile','=',self)]"/>-->
+<!--                   <group expand="0" name="group_by" string="Group By">-->
+<!--                       <filter name="salesperson" string="Salesperson" domain="[]" context="{'group_by' : 'user_id'}" />-->
+<!--                       <filter name="group_company" string="Company" context="{'group_by': 'parent_id'}"/>-->
+<!--                       <filter name="group_country" string="Country" context="{'group_by': 'country_id'}"/>-->
+<!--                   </group>-->
+<!--               </search>-->
+            </field>
+        </record>
+
+<!--        <record id="custom__inherit_res_partner_action" model="ir.actions.act_window">-->
+<!--            <field name="name">เวลาว่างผู้เข้าร่วมประชุม</field>-->
+<!--            <field name="type">ir.actions.act_window</field>-->
+<!--            <field name="res_model">res.partner</field>-->
+<!--            <field name="view_mode">tree,form</field>-->
+<!--            <field name="view_type">form</field>-->
+<!--            <field name="domain">[]</field>-->
+<!--        </record>-->
+
+<!--        <menuitem id="menu_free_time_personal" name="เวลาว่างผู้เข้าร่วมประชุม" parent="main_menu_before_meeting"-->
+<!--          action="custom__inherit_res_partner_action"-->
+<!--          sequence="3"/>-->
+
+    </data>
+</odoo>
