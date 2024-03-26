@@ -16,3 +16,7 @@ from . import con_res_user
 from . import con_position
 from . import con_mt_work_group
 from . import con_meeting_os
+from . import con_meeting_agenda
+from . import con_meeting_notify
+from . import con_dashboard
+from . import config_database

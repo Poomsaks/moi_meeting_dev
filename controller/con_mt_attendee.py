@@ -64,6 +64,8 @@ class ConMtAttendee(http.Controller):
                     'state_text': dict(rec._fields['state'].selection).get(rec.state),
                     'state': rec.state,
                     'vote_type': rec.vote_type or None,
+                    'attendee_confirm': rec.attendee_confirm or None,
+                    'attendee_status': rec.attendee_status or None,
                     'agenda_list': [{'agenda_id': record.id,
                                      'agenda_title_name': record.agenda_title_name,
                                      'note': record.note,
@@ -92,7 +94,7 @@ class ConMtAttendee(http.Controller):
             if post.get('attendee_confirm_list'):
                 attendee_data = json.loads(json.dumps(post.get('attendee_confirm_list')))
                 for rec in attendee_data:
-                    if rec['id']:
+                    if rec.get('id'):
                         if rec.get('agenda_list'):
                             agenda_data = json.loads(json.dumps(rec.get('agenda_list')))
                             attendee_agenda_update = request.env['attendee.agenda'].search(

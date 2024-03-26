@@ -15,7 +15,8 @@ class CustomCalendarAttendee(models.Model):
         ('declined', 'ไม่เข้าร่วมประชุม'),
         ('instead', 'ให้ผู้อื่นเข้าร่วมประชุมแทน'),
     ]
-
+    attendee_code = fields.Char(string="attendee_code", required=False)
+    confirm_status = fields.Char(string="confirm_status", required=False)
     position_id = fields.Many2one(comodel_name="mdm.position", string="ตำแหน่ง", required=False, )
     state = fields.Selection(STATE_SELECTION, string='Status', readonly=True, default='needsAction',
                              help="Status of the attendee's participation")
@@ -34,10 +35,20 @@ class CustomCalendarAttendee(models.Model):
 
     vote_type = fields.Char(string="ประเภทการ vote", required=False)
 
+    external_name = fields.Char(string="ชื่อผู้เข้าร่วมภายนอก", required=False)
+    external_email = fields.Char(string="อีเมลผู้เข้าร่วมภายนอก", required=False)
+
+    attendee_confirm = fields.Char(string="attendee_confirm", required=False)
+    attendee_status = fields.Char(string="attendee_status", required=False)
+
     @api.model
     def do_instead(self):
         """ Makes event invitation as Instead. """
         return self.write({'state': 'instead'})
+
+    @api.model
+    def do_accept(self):
+        self.state = 'accepted'
 
 
 class AttendeeAgenda(models.Model):

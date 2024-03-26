@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import base64
+import datetime
 import json
 
 from odoo import http
 from odoo.http import request
+from pytz import timezone
 
 
 class ControllerAgenda(http.Controller):
@@ -53,6 +55,79 @@ class ControllerAgenda(http.Controller):
             return data
         else:
             data = {'status': 500, 'response': 'ไม่พบข้อมูลวาระการประชุม', 'message': 'success'}
+            return data
+
+    @http.route('/api/meeting/get_meeting_attach_file', type='json', auth='none')
+    def get_meeting_attach_file(self, **post):
+        request.session.db = post.get('db')
+        meeting_id = post.get('meeting_id')
+        if meeting_id:
+            calendar_event_info = request.env['calendar.event'].search([
+                ('id', '=', meeting_id),
+                ('start_date', '>=', datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')),
+                ('end_date', '<=', datetime.datetime.now().strftime('%Y-%m-%d 23:59:59'))
+            ])
+            if calendar_event_info:
+                meeting_agenda_info = request.env['meeting.agenda'].search(
+                    [('meeting_id', '=', calendar_event_info.id)])
+                if meeting_agenda_info:
+                    attach_data_info = request.env['meeting.agenda.attach'].search(
+                        [('agenda_id', '=', meeting_agenda_info.id)])
+                    if attach_data_info:
+                        la_tz = timezone('Asia/Bangkok')
+                        data_rec = {
+                            'agenda_id': attach_data_info.agenda_id.id,
+                            'id': attach_data_info.id,
+                            'attach_user': attach_data_info.attach_user or None,
+                            'attach_type': attach_data_info.attach_type or None,
+                            'attach_flag': attach_data_info.attach_flag or None,
+                            'attachment_file': attach_data_info.attachment_file,
+                            'attachment_name': attach_data_info.attachment_name or None,
+                            'attachment_import_date': attach_data_info.attachment_import_date.astimezone(
+                                la_tz) if attach_data_info.attachment_import_date else None,
+                        }
+
+                        data = {'status': 200, 'response': data_rec, 'message': 'success'}
+                        return data
+                    else:
+                        data = {'status': 500, 'response': 'No attachment data found for the given agenda.',
+                                'message': 'error'}
+                        return data
+                else:
+                    data = {'status': 500, 'response': 'No meeting agenda found for the given calendar event.',
+                            'message': 'error'}
+                    return data
+            else:
+                data = {'status': 500, 'response': 'No calendar event found with the given ID.', 'message': 'error'}
+                return data
+        else:
+            data = {'status': 500, 'response': 'No meeting ID provided.', 'message': 'error'}
+            return data
+
+    @http.route('/api/meeting/get_meeting_attach_file_by_id', type='json', auth='none')
+    def get_meeting_attach_file_by_id(self, **post):
+        request.session.db = post.get('db')
+        data_info = request.env['meeting.agenda.attach'].search([
+            ('agenda_id', '=', post.get('agenda_id')),
+            ('id', '=', post.get('id'))])
+        if data_info:
+            la_tz = timezone('Asia/Bangkok')
+            data_rec = {
+                'agenda_id': data_info.agenda_id.id,
+                'id': data_info.id,
+                'attach_user': data_info.attach_user or None,
+                'attach_type': data_info.attach_type or None,
+                'attach_flag': data_info.attach_flag or None,
+                'attachment_file': data_info.attachment_file,
+                'attachment_name': data_info.attachment_name or None,
+                'attachment_import_date': data_info.attachment_import_date.astimezone(
+                    la_tz) if data_info.attachment_import_date else None,
+            }
+
+            data = {'status': 200, 'response': data_rec, 'message': 'success'}
+            return data
+        else:
+            data = {'status': 500, 'response': 'ไม่พบข้อมูลเอกสาร', 'message': 'success'}
             return data
 
     @http.route('/api/meeting/update_agenda', type='json', auth='user')

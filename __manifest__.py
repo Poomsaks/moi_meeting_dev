@@ -1,12 +1,13 @@
 {
-    "name": "Odoo Thai Meeting dev",
-    "version": "12.0.2.0.0",
+    "name": "MOI DcService Meeting",
+    "version": "12.0.3",
     "author": "Betimes Solutions Co., Ltd.",
     "website": "https://www.betimes.biz",
     'images': ['static/description/meeting.png'],
-    'depends': ['web', 'base', 'calendar', 'project', 'board', 'uom'],
+    'depends': ['web', 'base', 'calendar', 'project', 'board', 'uom', 'mail'],
     'data': [
         'security/ir.model.access.csv',
+
         'views/main_menus.xml',
         'views/mt_room_view.xml',
         'views/mt_type_vote_view.xml',
@@ -26,7 +27,10 @@
         'views/project_task_view.xml',
         'views/mdm_position_view.xml',
         'views/mt_work_group_view.xml',
-        'views/attendee_vote_choice_view.xml'
+        'views/attendee_vote_choice_view.xml',
+        'views/mt_system.xml',
+        'data/mail_template.xml',
+        'views/meeting_notify_view.xml'
 
     ],
     'demo': [''],

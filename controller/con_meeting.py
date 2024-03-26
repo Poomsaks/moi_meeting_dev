@@ -40,17 +40,20 @@ class ConMeeting(http.Controller):
             'meet_number': post.get('meet_number'),
             'meet_passcode': post.get('meet_passcode'),
             'requester_id': post.get('requester_id'),
-            'meeting_root_type': post.get('meeting_root_type')
+            'meeting_root_type': post.get('meeting_root_type'),
+            'confirm_status':  post.get('confirm_status')
         })
         data = {'status': 200, 'response': data_create.id, 'message': 'success'}
         return data
 
     @http.route('/api/meeting/create_update_meeting_agenda', type='json', auth='user')
     def create_update_meeting_agenda(self, **post):
+        data = []
         if post.get('agenda_ids'):
             agenda_data = json.loads(json.dumps(post.get('agenda_ids')))
             for agenda_item in agenda_data:
                 if agenda_item.get('agenda_id'):
+                    data.append(agenda_item.get('agenda_id'))
                     agenda_update = request.env['meeting.agenda'].search([('id', '=', agenda_item.get('agenda_id'))])
                     if agenda_update:
                         agenda_update.write({
@@ -64,6 +67,7 @@ class ConMeeting(http.Controller):
                         sub_agenda_ids = agenda_item.get('sub_agenda_ids', [])
                         for sub_agenda_item in sub_agenda_ids:
                             if sub_agenda_item.get('sub_agenda_id'):
+                                data.append(sub_agenda_item.get('sub_agenda_id'))
                                 sub_agenda_update = request.env['meeting.sub.agenda'].search(
                                     [('id', '=', sub_agenda_item.get('sub_agenda_id'))])
                                 if sub_agenda_update:
@@ -73,20 +77,20 @@ class ConMeeting(http.Controller):
                                         'sub_agenda_name': sub_agenda_item.get('sub_agenda_name'),
                                         'sub_agenda_detail': sub_agenda_item.get('sub_agenda_detail'),
                                         'partner_id': sub_agenda_item.get('partner_id'),
-                                        'vote_state': sub_agenda_item.get('vote_state')
+                                        'vote_state': sub_agenda_item.get('vote_state_id')
                                     })
                                     sub_agenda_attach_ids = sub_agenda_item.get('sub_agenda_attach_ids', [])
                                     for sub_agenda_attach_item in sub_agenda_attach_ids:
                                         if sub_agenda_attach_item.get('attach_id'):
+                                            data.append(sub_agenda_attach_item.get('attach_id'))
                                             sub_agenda_attach_update = request.env['meeting.sub.agenda.attach'].search(
                                                 [('id', '=', sub_agenda_attach_item.get('attach_id'))])
                                             if sub_agenda_attach_update:
                                                 sub_agenda_attach_update.write({
-                                                    'sub_agenda_id': sub_agenda_item.get('sub_agenda_id'),
-                                                    'attach_user': sub_agenda_item.get('attach_user'),
-                                                    'attach_type': sub_agenda_item.get('attach_type'),
-                                                    'attach_flag': sub_agenda_item.get('attach_flag'),
-
+                                                    'sub_agenda_id': sub_agenda_update.id,
+                                                    'attach_user': sub_agenda_attach_item.get('attach_user'),
+                                                    'attach_type': sub_agenda_attach_item.get('attach_type'),
+                                                    'attach_flag': sub_agenda_attach_item.get('attach_flag'),
                                                     'attachment_file': sub_agenda_attach_item.get('attachment_file'),
                                                     'attachment_name': sub_agenda_attach_item.get('attachment_name'),
                                                 })
@@ -106,7 +110,7 @@ class ConMeeting(http.Controller):
                                     'sub_agenda_name': sub_agenda_item.get('sub_agenda_name'),
                                     'sub_agenda_detail': sub_agenda_item.get('sub_agenda_detail'),
                                     'partner_id': sub_agenda_item.get('partner_id'),
-                                    'vote_state': sub_agenda_item.get('vote_state')
+                                    'vote_state': sub_agenda_item.get('vote_state_id')
                                 })
                                 sub_agenda_attach_ids = sub_agenda_item.get('sub_agenda_attach_ids', [])
                                 for sub_agenda_attach_item in sub_agenda_attach_ids:
@@ -138,6 +142,7 @@ class ConMeeting(http.Controller):
                         'agenda_no': agenda_item.get('agenda_no'),
                         'agenda_detail': agenda_item.get('agenda_detail'),
                         'partner_id': agenda_item.get('partner_id'),
+                        'vote_state': agenda_item.get('vote_state_id')
                     })
                     sub_agenda_ids = agenda_item.get('sub_agenda_ids', [])
                     for sub_agenda_item in sub_agenda_ids:
@@ -151,7 +156,7 @@ class ConMeeting(http.Controller):
                                     'sub_agenda_name': sub_agenda_item.get('sub_agenda_name'),
                                     'sub_agenda_detail': sub_agenda_item.get('sub_agenda_detail'),
                                     'partner_id': sub_agenda_item.get('partner_id'),
-                                    'vote_state': sub_agenda_item.get('vote_state')
+                                    'vote_state': sub_agenda_item.get('vote_state_id')
                                 })
                         else:
                             sub_agenda_create = request.env['meeting.sub.agenda'].create({
@@ -160,6 +165,7 @@ class ConMeeting(http.Controller):
                                 'sub_agenda_name': sub_agenda_item.get('sub_agenda_name'),
                                 'sub_agenda_detail': sub_agenda_item.get('sub_agenda_detail'),
                                 'partner_id': sub_agenda_item.get('partner_id'),
+                                'vote_state': agenda_item.get('vote_state_id')
                             })
                             sub_agenda_attach_ids = sub_agenda_item.get('sub_agenda_attach_ids', [])
                             for sub_agenda_attach_item in sub_agenda_attach_ids:
@@ -184,7 +190,7 @@ class ConMeeting(http.Controller):
                                         'attachment_file': sub_agenda_attach_item.get('attachment_file'),
                                         'attachment_name': sub_agenda_attach_item.get('attachment_name'),
                                     })
-        data = {'status': 200, 'response': "เพิ่มข้อมูลสำเร็จ", 'message': 'success'}
+        data = {'status': 200, 'response': data, 'message': 'success'}
         return data
 
     # @http.route('/api/meeting/create_update_meeting_agenda', type='json', auth='user')
@@ -503,9 +509,9 @@ class ConMeeting(http.Controller):
             ICT = timezone('Asia/Bangkok')
             duration = float(post.get('duration'))
             start_datetime = datetime.datetime.strptime(post.get('start_datetime'), DEFAULT_SERVER_DATETIME_FORMAT)
-            start = ICT.localize(start_datetime).astimezone(timezone('UTC')).replace(tzinfo=None)
+            start = ICT.localize(start_datetime).astimezone(timezone('Asia/Bangkok')).replace(tzinfo=None)
             end_date_time = start_datetime + timedelta(hours=duration)
-            stop = ICT.localize(end_date_time).astimezone(timezone('UTC')).replace(tzinfo=None)
+            stop = ICT.localize(end_date_time).astimezone(timezone('Asia/Bangkok')).replace(tzinfo=None)
             data_model.write({
                 'name': post.get('name'),
                 ### Add fields ###
@@ -527,6 +533,7 @@ class ConMeeting(http.Controller):
                 'meet_passcode': post.get('meet_passcode'),
                 'requester_id': post.get('requester_id'),
                 'meeting_root_type': post.get('meeting_root_type'),
+                'confirm_status': post.get('confirm_status')
 
             })
 
@@ -758,19 +765,20 @@ class ConMeeting(http.Controller):
                     'room_type': dict(rec.room_id._fields['room_type'].selection).get(rec.room_id.room_type) or None,
                     'room_address': "%s ชั้น %s %s" % (
                         rec.room_id.room_name, str(rec.room_id.floor), (rec.room_id.room_address or "")),
-                    'start': rec.start.astimezone(ICT) if rec.start else None,
-                    'stop': rec.stop.astimezone(ICT) if rec.stop else None,
-                    'start_datetime': rec.start.astimezone(ICT) if rec.start else None,
-                    'end_datetime': rec.stop.astimezone(ICT) if rec.stop else None,
-                    'start_date': rec.start.astimezone(ICT) if rec.start else None,
-                    'end_date': rec.stop.astimezone(ICT) if rec.stop else None,
+                    'start': rec.start if rec.start else None,
+                    'stop': rec.stop if rec.stop else None,
+                    'start_datetime': rec.start if rec.start else None,
+                    'end_datetime': rec.stop if rec.stop else None,
+                    'start_date': rec.start if rec.start else None,
+                    'end_date': rec.stop if rec.stop else None,
                     'description': rec.description or None,
                     'duration': rec.duration,
                     'requester_id': rec.partner_id.id,
                     'requester_name': rec.partner_id.display_name,
-                    'create_date': rec.create_date.astimezone(ICT) if rec.create_date else None,
+                    'create_date': rec.create_date if rec.create_date else None,
                     'meeting_type_id': rec.meeting_type_id.id or None,
                     'meeting_type_name': rec.meeting_type_id.type_name or None,
+                    'confirm_status': rec.confirm_status or None,
                 }
                 data_rec.append(vals)
 
@@ -815,12 +823,12 @@ class ConMeeting(http.Controller):
                     'room_type': dict(rec.room_id._fields['room_type'].selection).get(rec.room_id.room_type) or None,
                     'room_address': "%s ชั้น %s %s" % (
                         rec.room_id.room_name, str(rec.room_id.floor), (rec.room_id.room_address or "")),
-                    'start': rec.start.astimezone(ICT) if rec.start else None,
-                    'stop': rec.stop.astimezone(ICT) if rec.stop else None,
-                    'start_datetime': rec.start.astimezone(ICT) if rec.start else None,
-                    'end_datetime': rec.stop.astimezone(ICT) if rec.stop else None,
-                    'start_date': rec.start.astimezone(ICT) if rec.start else None,
-                    'end_date': rec.stop.astimezone(ICT) if rec.stop else None,
+                    'start': rec.start if rec.start else None,
+                    'stop': rec.stop if rec.stop else None,
+                    'start_datetime': rec.start if rec.start else None,
+                    'end_datetime': rec.stop if rec.stop else None,
+                    'start_date': rec.start if rec.start else None,
+                    'end_date': rec.stop if rec.stop else None,
                     'description': rec.description or None,
                     'duration': rec.duration,
                     'requester_id': rec.partner_id.id or None,
@@ -829,10 +837,12 @@ class ConMeeting(http.Controller):
                     'cancel_reason': rec.cancel_reason or None,
                     'cancel_description': rec.cancel_description or None,
 
-                    'create_date': rec.create_date.astimezone(ICT) if rec.create_date else None,
+                    'create_date': rec.create_date if rec.create_date else None,
                     'meeting_type_id': rec.meeting_type_id.id or None,
                     'meeting_type_name': rec.meeting_type_id.type_name or None,
                     'meeting_summary': rec.meeting_summary or None,
+
+                    'confirm_status': rec.confirm_status or None,
 
                 }
                 data_rec.append(vals)
@@ -939,15 +949,15 @@ class ConMeeting(http.Controller):
                         'room_address': "%s ชั้น %s %s" % (
                             rec.room_id.room_name, str(rec.room_id.floor), (rec.room_id.room_address or "")),
                         'description': rec.description or None,
-                        'start': rec.start.astimezone(ICT) if rec.start else None,
-                        'stop': rec.stop.astimezone(ICT) if rec.stop else None,
+                        'start': rec.start if rec.start else None,
+                        'stop': rec.stop if rec.stop else None,
                         'duration': rec.duration,
                         'requester_id': rec.partner_id.id,
                         'requester_name': rec.partner_id.display_name,
                         'meeting_summary': rec.meeting_summary or None,
                         'cancel_reason': rec.cancel_reason or None,
                         'cancel_description': rec.cancel_description or None,
-                        'create_date': rec.create_date.astimezone(ICT) if rec.create_date else None,
+                        'create_date': rec.create_date if rec.create_date else None,
                     }
                     data_rec.append(vals)
                 data = {'status': 200, 'response': data_rec, 'message': 'success'}
@@ -1000,13 +1010,13 @@ class ConMeeting(http.Controller):
                     'room_type': dict(rec.room_id._fields['room_type'].selection).get(rec.room_id.room_type) or None,
                     'room_address': "%s ชั้น %s %s" % (
                         rec.room_id.room_name, str(rec.room_id.floor), (rec.room_id.room_address or "")),
-                    'start': rec.start.astimezone(ICT) if rec.start else None,
-                    'stop': rec.stop.astimezone(ICT) if rec.stop else None,
+                    'start': rec.start if rec.start else None,
+                    'stop': rec.stop if rec.stop else None,
                     'description': rec.description or None,
                     'duration': rec.duration,
                     'requester_id': rec.partner_id.id,
                     'requester_name': rec.partner_id.display_name,
-                    'create_date': rec.create_date.astimezone(ICT) if rec.create_date else None,
+                    'create_date': rec.create_date if rec.create_date else None,
                 }
                 data_rec.append(vals)
 
@@ -1066,13 +1076,13 @@ class ConMeeting(http.Controller):
                             rec.room_id.room_type) or None,
                         'room_address': "%s ชั้น %s %s" % (
                             rec.room_id.room_name, str(rec.room_id.floor), (rec.room_id.room_address or "")),
-                        'start': rec.start.astimezone(ICT) if rec.start else None,
-                        'stop': rec.stop.astimezone(ICT) if rec.stop else None,
+                        'start': rec.start if rec.start else None,
+                        'stop': rec.stop if rec.stop else None,
                         'description': rec.description or None,
                         'duration': rec.duration,
                         'requester_id': rec.partner_id.id,
                         'requester_name': rec.partner_id.display_name,
-                        'create_date': rec.create_date.astimezone(ICT) if rec.create_date else None,
+                        'create_date': rec.create_date if rec.create_date else None,
                     }
                     data_rec.append(vals)
                 else:

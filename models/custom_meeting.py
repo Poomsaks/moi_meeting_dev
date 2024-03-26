@@ -106,11 +106,15 @@ class CustomMeet(models.Model):
                                    string='เจ้าของห้องประชุม',
                                    help="Technical field to save requester_id"
                                    )
-    requester_code = fields.Many2one('res.partner',
-                                     string='คนสร้างห้องประชุม',
-                                     help="Technical field to save requester_id"
-                                     )
+    requester_code = fields.Char(string='คนสร้างห้องประชุม', required=False)
     description = fields.Text(string="description", required=False, widget="html")
+
+    ref_id = fields.Char(string='ref_id', required=False)
+    ref_system_code = fields.Char(string='ref_system_code', required=False)
+
+    confirm_status = fields.Char(string="confirm_status", required=False)
+
+    ref_borrow_flag = fields.Char(string="ref_borrow_flag", required=False, default='N')
 
     @api.depends('task_ids')
     def _compute_in_process_task_count(self):
@@ -314,6 +318,16 @@ class MeetingAgendaUrl(models.Model):
     url_name = fields.Char("URL")
 
 
+class MeetingAgendaPersnalNote(models.Model):
+    _name = 'meeting.agenda.personal.note'
+
+    agenda_id = fields.Many2one(comodel_name="meeting.agenda",
+                                string="วาระการประชุม", ondelete='cascade', required=True,
+                                index=True)
+    partner_id = fields.Many2one(comodel_name="res.partner", string="เจ้าของ", required=False)
+    note_detail = fields.Text(string="รายละเอียด", required=False, )
+
+
 class MeetingAgendaAttach(models.Model):
     _name = 'meeting.agenda.attach'
 
@@ -362,6 +376,9 @@ class MeetingAgenda(models.Model):
     create_vote_ids = fields.One2many(comodel_name="create.agenda.vote", inverse_name="agenda_id",
                                       string="Create Vote")
 
+    personal_note_ids = fields.One2many(comodel_name="meeting.agenda.personal.note", inverse_name="agenda_id",
+                                        string="personal note")
+
     attendee_count = fields.Integer(string="Attendee Count", required=False, )
 
     vote_ids = fields.One2many(comodel_name="common.agenda.vote", inverse_name="agenda_meeting_id",
@@ -378,7 +395,21 @@ class MeetingEquipment(models.Model):
     equipment_id = fields.Many2one(comodel_name="mt.equipment", string="อุปกรณ์", required=True)
     equipment_unit = fields.Char(string="หน่วย", related="equipment_id.equip_unit", required=False, )
     equipment_qty = fields.Integer(string="จำนวน", required=False, )
-
+    ref_trans_id = fields.Char(
+        string='Ref_trans_id',
+        required=False)
+    ref_status = fields.Char(
+        string='ref_status',
+        required=False)
+    ref_request_datetime = fields.Char(
+        string='ref_request_datetime',
+        required=False)
+    returnDatetime = fields.Char(
+        string='returnDatetime',
+        required=False)
+    updatedDatetime = fields.Char(
+        string='updatedDatetime',
+        required=False)
     _sql_constraints = [
         ('unique_meeting_equipment', 'UNIQUE(meeting_id, equipment_id)', _('มีรายการอุปกรณ์ซ้ำ ในการประชุม !!'))
     ]

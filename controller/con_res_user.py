@@ -18,8 +18,9 @@ class ConResUser(http.Controller):
                 vals = {
                     'id': rec.id,
                     'name': rec.name,
-                    'email': rec.email,
+                    'login': rec.login,
                     'phone': rec.phone,
+                    'email': rec.partner_id.email,
                     'user_role': rec.user_role,  # user_role
                     'user_type': rec.user_type,  # user_type
                     'state': rec.state,
@@ -40,7 +41,8 @@ class ConResUser(http.Controller):
                 vals = {
                     'id': rec.id,
                     'name': rec.name,
-                    'email': rec.email,
+                    'login': rec.login,
+                    'email': rec.partner_id.email,
                     'phone': rec.phone,
                     'user_role': rec.user_role,  # user_role
                     'user_type': rec.user_type,  # user_type

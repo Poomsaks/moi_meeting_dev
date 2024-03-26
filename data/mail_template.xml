@@ -1,0 +1,412 @@
+<?xml version="1.0"?>
+<odoo>
+    <data noupdate="1">
+        <record id="calendar_template_meeting_custom" model="mail.template">
+            <field name="name">Calendar: Meeting จัดการห้องประชุม</field>
+            <field name="model_id" ref="model_calendar_attendee"/>
+            <field name="subject">เอกสารเชิญ to {{ object.partner_id.name }}</field>
+            <field name="email_from">{{ (object.event_id.user_id.email_formatted or user.email_formatted or '') }}</field>
+            <field name="email_to">{{ ('' if object.partner_id.email and object.partner_id.email == object.email else object.email) }}</field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="description">จัดการห้องประชุม</field>
+            <field name="body_html" type="html">
+                <div style="width: auto;height: 100%;">
+                        <div style="width: 900px;margin: auto;height: 100%;border:1px solid #d5d5d5;">
+                            <div style="width: 800px;margin: auto; height: 100%;">
+
+                                <div
+                                        style="width: 800px;font-size: 25px;font-weight: bold;text-align:left;font-family: 'Cordia New', 'Leelawadee UI', Silom, sans-serif;">
+                                    เชิญประชุม
+                                </div>
+
+
+                                <table
+                                        style="width: 600px; display: flex; border-collapse: collapse;font-family: 'Cordia New', 'Leelawadee UI', Silom, sans-serif;">
+
+                                    <tr style="border: 0px solid #d5d5d5;text-align: left;">
+                                        <td style="border: 0px solid #d5d5d5;">
+
+
+                                            <div style="font-size: 20px;">
+                                                <span style="color: windowtext;font-weight: bold;">ถึง</span>
+                                                <span style="font-weight:bold;font-size: 20px;">
+                                                    <t t-out="object.partner_id.name or ''"/>
+                                                </span>
+                                            </div>
+
+                                            <div style="font-size: 20px;">
+                                                <span style="color: windowtext;font-weight: bold;">สำเนาถึง</span>
+                                                <span style="font-weight:bold;font-size: 20px;">
+                                                    <t t-out="object.name or ''"/>
+                                                </span>
+                                            </div>
+
+                                            <div style="font-size: 20px;">
+                                                <span style="color: windowtext;font-weight: bold;">เรื่อง.</span>
+                                                <span style="font-weight:bold;font-size: 20px;">
+                                                    <t t-out="object.event_id.name or ''"/>
+                                                </span>
+
+                                            </div>
+                                            <div style="font-size: 20px;">
+                                                <span style="color: windowtext;font-weight: bold;">
+                                                    เรียนให้ทราบเกี่ยวกับขอ"
+                                                </span>
+                                                <span
+                                                        style="font-weight:bold;font-size: 20px;text-decoration:underline;color:rgb(255,0,0);">
+                                                    เชิญประชุม
+                                                </span>
+                                                <span style="color: windowtext;font-weight: bold;">
+                                                    "โดยมีรายละเอียดดังนี้
+                                                </span>
+
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <table
+                                        style="width: 600px; display: flex; border-collapse: collapse;font-family: 'Cordia New', 'Leelawadee UI', Silom, sans-serif;font-size: 20px;">
+
+                                    <tr style="border: 0px solid #d5d5d5;text-align: left;">
+                                        <td style="border: 0px solid #d5d5d5;background-color:#D6EEEE;font-weight:bold;">
+                                            ชื่อการประชุม:
+                                        </td>
+                                        <td style="border: 0px solid #d5d5d5;font-size: 20px;">
+                                            <t t-out="object.event_id.room_id.room_name or ''"/>
+                                        </td>
+                                    </tr>
+
+
+                                    <tr style="border: 0px solid #d5d5d5;text-align: left;">
+                                        <td style="border: 0px solid #d5d5d5;background-color:#D6EEEE;font-weight:bold;">
+                                            ผู้การประชุม:
+                                        </td>
+                                        <td style="border: 0px solid #d5d5d5;font-size: 20px;">
+                                            <t t-out="object.event_id.president_id.name or ''"/>
+                                        </td>
+                                    </tr>
+
+                                    <tr style="border: 0px solid #d5d5d5;text-align: left;">
+                                        <td style="border: 0px solid #d5d5d5;background-color:#D6EEEE;font-weight:bold;">
+                                            เริ่ม:
+                                        </td>
+                                        <td style="border: 0px solid #d5d5d5;font-size: 20px;">
+                                            <t t-out="object.event_id.start_datetime or ''"/>
+                                        </td>
+                                    </tr>
+
+                                    <tr style="border: 0px solid #d5d5d5;text-align: left;"/>
+                                    <td style="border: 0px solid #d5d5d5;background-color:#D6EEEE;font-weight:bold;">
+                                        ถึง:
+                                    </td>
+                                    <td style="border: 0px solid #d5d5d5;font-size: 20px;">
+                                        <t t-out="object.event_id.end_datetime or ''"/>
+                                    </td>
+
+                                    <tr style="border: 0px solid #d5d5d5;text-align: left;">
+                                        <td style="border: 0px solid #d5d5d5;background-color:#D6EEEE;font-weight:bold;">
+                                            สถานที่:
+                                        </td>
+                                        <td style="border: 0px solid #d5d5d5;font-size: 20px;">
+                                            <t t-out="object.event_id.meeting_root_type or ''"/>
+                                        </td>
+                                    </tr>
+
+                                </table>
+                                <table
+                                        style="width: 600px; display: flex; border-collapse: collapse;font-family: 'Cordia New', 'Leelawadee UI', Silom, sans-serif;">
+
+                                    <tr style="border: 0px solid #d5d5d5;text-align: left;">
+                                        <td style="border: 0px solid #d5d5d5;">
+                                            <div style="font-size: 20px;">
+                                                <span style="color: windowtext;font-weight: bold;">เพื่อดำเนินการ:
+                                                </span>
+                                                <a href="http://meeting-support.win-victor.com/reserve/meeting-confirm?meeting_id=000&amp;partner_id=1245&amp;type=ext&amp;start=2024-02-20"
+                                                   style="font-weight: bold;font-size: 20px;">
+                                                    กดตอบรับการเข้าร่วมประชุม/ไม่เข้าร่วมประชุม
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
+                </div>
+            </field>
+        </record>
+
+        <record id="os_calendar_template_meeting_custom" model="mail.template">
+            <field name="name">Calendar: Meeting จัดการห้องประชุม os</field>
+            <field name="model_id" ref="model_calendar_attendee"/>
+            <field name="subject">เอกสารเชิญ to {{ object.partner_id.name }}</field>
+            <field name="email_from">{{ (object.event_id.user_id.email_formatted or user.email_formatted or '') }}</field>
+            <field name="email_to">{{ ('' if object.partner_id.email and object.partner_id.email == object.email else object.email) }}</field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="description">จัดการห้องประชุม</field>
+            <field name="body_html" type="html">
+                <div style="width: auto;height: 100%;">
+                        <div style="width: 900px;margin: auto;height: 100%;border:1px solid #d5d5d5;">
+                            <div style="width: 800px;margin: auto; height: 100%;">
+
+                                <div
+                                        style="width: 800px;font-size: 25px;font-weight: bold;text-align:left;font-family: 'Cordia New', 'Leelawadee UI', Silom, sans-serif;">
+                                    เชิญประชุม
+                                </div>
+
+
+                                <table
+                                        style="width: 600px; display: flex; border-collapse: collapse;font-family: 'Cordia New', 'Leelawadee UI', Silom, sans-serif;">
+
+                                    <tr style="border: 0px solid #d5d5d5;text-align: left;">
+                                        <td style="border: 0px solid #d5d5d5;">
+
+
+                                            <div style="font-size: 20px;">
+                                                <span style="color: windowtext;font-weight: bold;">ถึง</span>
+                                                <span style="font-weight:bold;font-size: 20px;">
+                                                    <t t-out="object.partner_id.name or ''"/>
+                                                </span>
+                                            </div>
+
+                                            <div style="font-size: 20px;">
+                                                <span style="color: windowtext;font-weight: bold;">สำเนาถึง</span>
+                                                <span style="font-weight:bold;font-size: 20px;">
+                                                    <t t-out="object.name or ''"/>
+                                                </span>
+                                            </div>
+
+                                            <div style="font-size: 20px;">
+                                                <span style="color: windowtext;font-weight: bold;">เรื่อง.</span>
+                                                <span style="font-weight:bold;font-size: 20px;">
+                                                    <t t-out="object.event_id.name or ''"/>
+                                                </span>
+
+                                            </div>
+                                            <div style="font-size: 20px;">
+                                                <span style="color: windowtext;font-weight: bold;">
+                                                    เรียนให้ทราบเกี่ยวกับขอ"
+                                                </span>
+                                                <span
+                                                        style="font-weight:bold;font-size: 20px;text-decoration:underline;color:rgb(255,0,0);">
+                                                    เชิญประชุม
+                                                </span>
+                                                <span style="color: windowtext;font-weight: bold;">
+                                                    "โดยมีรายละเอียดดังนี้
+                                                </span>
+
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <table
+                                        style="width: 600px; display: flex; border-collapse: collapse;font-family: 'Cordia New', 'Leelawadee UI', Silom, sans-serif;font-size: 20px;">
+
+                                    <tr style="border: 0px solid #d5d5d5;text-align: left;">
+                                        <td style="border: 0px solid #d5d5d5;background-color:#D6EEEE;font-weight:bold;">
+                                            ชื่อการประชุม:
+                                        </td>
+                                        <td style="border: 0px solid #d5d5d5;font-size: 20px;">
+                                            <t t-out="object.event_id.room_id.room_name or ''"/>
+                                        </td>
+                                    </tr>
+
+
+                                    <tr style="border: 0px solid #d5d5d5;text-align: left;">
+                                        <td style="border: 0px solid #d5d5d5;background-color:#D6EEEE;font-weight:bold;">
+                                            ผู้การประชุม:
+                                        </td>
+                                        <td style="border: 0px solid #d5d5d5;font-size: 20px;">
+                                            <t t-out="object.event_id.president_id.name or ''"/>
+                                        </td>
+                                    </tr>
+
+                                    <tr style="border: 0px solid #d5d5d5;text-align: left;">
+                                        <td style="border: 0px solid #d5d5d5;background-color:#D6EEEE;font-weight:bold;">
+                                            เริ่ม:
+                                        </td>
+                                        <td style="border: 0px solid #d5d5d5;font-size: 20px;">
+                                            <t t-out="object.event_id.start_datetime or ''"/>
+                                        </td>
+                                    </tr>
+
+                                    <tr style="border: 0px solid #d5d5d5;text-align: left;"/>
+                                    <td style="border: 0px solid #d5d5d5;background-color:#D6EEEE;font-weight:bold;">
+                                        ถึง:
+                                    </td>
+                                    <td style="border: 0px solid #d5d5d5;font-size: 20px;">
+                                        <t t-out="object.event_id.end_datetime or ''"/>
+                                    </td>
+
+                                    <tr style="border: 0px solid #d5d5d5;text-align: left;">
+                                        <td style="border: 0px solid #d5d5d5;background-color:#D6EEEE;font-weight:bold;">
+                                            สถานที่:
+                                        </td>
+                                        <td style="border: 0px solid #d5d5d5;font-size: 20px;">
+                                            <t t-out="object.event_id.meeting_root_type or ''"/>
+                                        </td>
+                                    </tr>
+
+                                </table>
+                                <table
+                                        style="width: 600px; display: flex; border-collapse: collapse;font-family: 'Cordia New', 'Leelawadee UI', Silom, sans-serif;">
+
+                                    <tr style="border: 0px solid #d5d5d5;text-align: left;">
+                                        <td style="border: 0px solid #d5d5d5;">
+                                            <div style="font-size: 20px;">
+                                                <span style="color: windowtext;font-weight: bold;">เพื่อดำเนินการ:
+                                                </span>
+                                                <a href="http://meeting-support.win-victor.com/reserve/meeting-confirm?meeting_id=000&amp;partner_id=1245&amp;type=int&amp;start=2024-02-20" style="font-weight: bold;font-size: 20px;">
+                                                    กดตอบรับการเข้าร่วมประชุม/ไม่เข้าร่วมประชุม
+                                                </a>
+
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+            </field>
+        </record>
+
+        <record id="calendar_template_meeting_custom_end_meeting" model="mail.template">
+            <field name="name">Calendar: Meeting สรุปการประชุม</field>
+            <field name="model_id" ref="model_calendar_attendee"/>
+            <field name="subject">รับรองการประชุม to {{ object.partner_id.name }}</field>
+            <field name="email_from">{{ (object.event_id.user_id.email_formatted or user.email_formatted or '') }}</field>
+            <field name="email_to">{{ ('' if object.partner_id.email and object.partner_id.email == object.email else object.email) }}</field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="description">รับรองการประชุม</field>
+            <field name="body_html" type="html">
+                <div style="width: auto;height: 100%;">
+                        <div style="width: 900px;margin: auto;height: 100%;border:1px solid #d5d5d5;">
+                            <div style="width: 800px;margin: auto; height: 100%;">
+
+                                <div
+                                        style="width: 800px;font-size: 25px;font-weight: bold;text-align:left;font-family: 'Cordia New', 'Leelawadee UI', Silom, sans-serif;">
+                                    รับรองการประชุม
+                                </div>
+
+
+                                <table
+                                        style="width: 600px; display: flex; border-collapse: collapse;font-family: 'Cordia New', 'Leelawadee UI', Silom, sans-serif;">
+
+                                    <tr style="border: 0px solid #d5d5d5;text-align: left;">
+                                        <td style="border: 0px solid #d5d5d5;">
+
+
+                                            <div style="font-size: 20px;">
+                                                <span style="color: windowtext;font-weight: bold;">ถึง</span>
+                                                <span style="font-weight:bold;font-size: 20px;">
+                                                    <t t-out="object.partner_id.name or ''"/>
+                                                </span>
+                                            </div>
+
+                                            <div style="font-size: 20px;">
+                                                <span style="color: windowtext;font-weight: bold;">สำเนาถึง</span>
+                                                <span style="font-weight:bold;font-size: 20px;">
+                                                    <t t-out="object.name or ''"/>
+                                                </span>
+                                            </div>
+
+                                            <div style="font-size: 20px;">
+                                                <span style="color: windowtext;font-weight: bold;">เรื่อง.</span>
+                                                <span style="font-weight:bold;font-size: 20px;">
+                                                    <t t-out="object.event_id.name or ''"/>
+                                                </span>
+
+                                            </div>
+                                            <div style="font-size: 20px;">
+                                                <span style="color: windowtext;font-weight: bold;">
+                                                    เรียนให้ทราบเกี่ยวกับขอ"
+                                                </span>
+                                                <span
+                                                        style="font-weight:bold;font-size: 20px;text-decoration:underline;color:rgb(255,0,0);">
+                                                    รับรองการประชุม
+                                                </span>
+                                                <span style="color: windowtext;font-weight: bold;">
+                                                    "โดยมีรายละเอียดดังนี้
+                                                </span>
+
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <table
+                                        style="width: 600px; display: flex; border-collapse: collapse;font-family: 'Cordia New', 'Leelawadee UI', Silom, sans-serif;font-size: 20px;">
+
+                                    <tr style="border: 0px solid #d5d5d5;text-align: left;">
+                                        <td style="border: 0px solid #d5d5d5;background-color:#D6EEEE;font-weight:bold;">
+                                            ชื่อการประชุม:
+                                        </td>
+                                        <td style="border: 0px solid #d5d5d5;font-size: 20px;">
+                                            <t t-out="object.event_id.room_id.room_name or ''"/>
+                                        </td>
+                                    </tr>
+
+
+                                    <tr style="border: 0px solid #d5d5d5;text-align: left;">
+                                        <td style="border: 0px solid #d5d5d5;background-color:#D6EEEE;font-weight:bold;">
+                                            ผู้การประชุม:
+                                        </td>
+                                        <td style="border: 0px solid #d5d5d5;font-size: 20px;">
+                                            <t t-out="object.event_id.president_id.name or ''"/>
+                                        </td>
+                                    </tr>
+
+                                    <tr style="border: 0px solid #d5d5d5;text-align: left;">
+                                        <td style="border: 0px solid #d5d5d5;background-color:#D6EEEE;font-weight:bold;">
+                                            เริ่ม:
+                                        </td>
+                                        <td style="border: 0px solid #d5d5d5;font-size: 20px;">
+                                            <t t-out="object.event_id.start_datetime or ''"/>
+                                        </td>
+                                    </tr>
+
+                                    <tr style="border: 0px solid #d5d5d5;text-align: left;"/>
+                                    <td style="border: 0px solid #d5d5d5;background-color:#D6EEEE;font-weight:bold;">
+                                        ถึง:
+                                    </td>
+                                    <td style="border: 0px solid #d5d5d5;font-size: 20px;">
+                                        <t t-out="object.event_id.end_datetime or ''"/>
+                                    </td>
+
+                                    <tr style="border: 0px solid #d5d5d5;text-align: left;">
+                                        <td style="border: 0px solid #d5d5d5;background-color:#D6EEEE;font-weight:bold;">
+                                            สถานที่:
+                                        </td>
+                                        <td style="border: 0px solid #d5d5d5;font-size: 20px;">
+                                            <t t-out="object.event_id.meeting_root_type or ''"/>
+                                        </td>
+                                    </tr>
+
+                                </table>
+                                <table
+                                        style="width: 600px; display: flex; border-collapse: collapse;font-family: 'Cordia New', 'Leelawadee UI', Silom, sans-serif;">
+
+                                    <tr style="border: 0px solid #d5d5d5;text-align: left;">
+                                        <td style="border: 0px solid #d5d5d5;">
+                                            <div style="font-size: 20px;">
+                                                <span style="color: windowtext;font-weight: bold;">เพื่อดำเนินการ:
+                                                </span>
+                                                <a href="www.google.com"
+                                                   style="font-weight: bold;font-size: 20px;">
+                                                    กดรับรองการประชุม/ไม่รับรองการประชุม
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+            </field>
+        </record>
+    </data>
+</odoo>

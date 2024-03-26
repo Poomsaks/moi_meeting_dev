@@ -53,3 +53,5 @@ meeting.attach,meeting.attach,model_meeting_attach,base.group_user,1,1,1,1
 mdm.position,mdm.position,model_mdm_position,base.group_user,1,1,1,1
 attendee.agenda,attendee.agenda,model_attendee_agenda,base.group_user,1,1,1,1
 attendee.vote.choice,attendee.vote.choice,model_attendee_vote_choice,base.group_user,1,1,1,1
+
+mail.activity.type,mail.activity.type,mail.model_mail_activity_type,base.group_user,1,1,1,1

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!--    TODO สถานะห้องประชุม-->
     <data>
 
         <record id="view_calendar_event_search_inherit" model="ir.ui.view">
@@ -147,7 +148,7 @@
                                 <field name="meet_passcode"/>
                                 <field name="meet_number"/>
                                 <field name="requester_id"/>
-                                 <field name="meeting_root_type"/>
+                                <field name="meeting_root_type"/>
                             </group>
                         </group>
 
@@ -312,9 +313,17 @@
                                         </group>
                                         <group col="2" colspan="4">
                                             <field name="sub_agenda_ids">
-                                                <tree>
+                                                <tree editable="bottom">
                                                     <field name="sub_agenda_no"/>
                                                     <field name="sub_agenda_name"/>
+                                                </tree>
+                                            </field>
+                                        </group>
+                                        <group col="2" colspan="4">
+                                            <field name="personal_note_ids">
+                                                <tree editable="bottom">
+                                                    <field name="partner_id"/>
+                                                    <field name="note_detail"/>
                                                 </tree>
                                             </field>
                                         </group>
@@ -458,17 +467,7 @@
                                     </tree>
                                 </field>
                             </page>
-                            <!-- Attendee join -->
-                            <page string="ผู้เข้าร่วมประชุม">
-                                <field name="attendee_join_ids" nolabel="1" context="{'default_meeting_id': id}">
-                                    <tree string="ผู้เข้าร่วมประชุม" editable="top" create="false" delete="false">
-                                        <field name="partner_id"/>
-                                        <field name="approve_date"/>
-                                        <field name="passcode"/>
-                                        <field name="state"/>
-                                    </tree>
-                                </field>
-                            </page>
+
                             <page name="page_misc" string="Misc">
                                 <group>
                                     <label for="user_id" string="Owner"/>

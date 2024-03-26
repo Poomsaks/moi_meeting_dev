@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="meeting_notify_view_tree" model="ir.ui.view">
+            <field name="name">ระบบแจ้งเตือน</field>
+            <field name="model">meeting.notify</field>
+            <field name="arch" type="xml">
+                <tree string="ระบบแจ้งเตือน">
+                    <field name="notify_name"/>
+                    <field name="notify_time_send"/>
+                    <field name="notify_project_id"/>
+                    <field name="status_notify"/>
+                </tree>
+            </field>
+        </record>
+        <record id="meeting_notify_view_form" model="ir.ui.view">
+            <field name="name">ระบบแจ้งเตือน</field>
+            <field name="model">meeting.notify</field>
+            <field name="arch" type="xml">
+                <form string="ระบบแจ้งเตือน">
+                    <sheet>
+                        <group>
+                            <field name="notify_name"/>
+                            <field name="notify_time_send"/>
+                            <field name="notify_time_read"/>
+                            <field name="notify_url"/>
+                            <field name="notify_send_id"/>
+                            <field name="notify_send_name"/>
+                            <field name="notify_recipient_id"/>
+                            <field name="notify_recipient_name"/>
+                            <field name="notify_email"/>
+                            <field name="notify_project_id"/>
+                            <field name="status_notify"/>
+                            <field name="other_lv1"/>
+                            <field name="other_lv2"/>
+                            <field name="other_lv3"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="meeting_notify_action" model="ir.actions.act_window">
+            <field name="name">ระบบแจ้งเตือน</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">meeting.notify</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <!-- This Menu Item must have a parent and an action -->
+        <menuitem id="meeting_notify_menu" name="ระบบแจ้งเตือน" parent="main_menu_meeting" action="meeting_notify_action" sequence="16"/>
+    </data>
+</odoo>

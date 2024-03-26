@@ -7,6 +7,9 @@ class MtEquipment(models.Model):
 
     equip_name = fields.Char(string="ชื่ออุปกรณ์", required=True, size=100)
     equip_brand = fields.Char(string="ยี่ห้อ/แบรนด์", required=False, size=100)
+    ref_equip_id = fields.Char(
+        string='Ref_equip_id', 
+        required=False)
     equip_quantity = fields.Integer(
         string='จำนวน',
         default=1,

@@ -26,3 +26,6 @@ from . import sub_agenda_vote
 from . import mdm_positin
 
 from . import mdm_attendee_vote_choice
+
+from . import mt_system
+from . import meeting_notify

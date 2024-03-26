@@ -8,8 +8,9 @@ class CustomResPartner(models.Model):
 
     # @Link to DS Personal Data
     personal_id = fields.Integer()
-    personal_code = fields.Char()
-    attendee_code = fields.Char(string="REFID")
+    personal_code = fields.Char(string="personal_code")
+    position_name = fields.Char(string="position_name")
+    attendee_code = fields.Char(string="attendee_code")
     # @Link to DS position_id
     position_id = fields.Integer(
         string="ตำแหน่ง",

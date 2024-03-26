@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mt_system_view_tree" model="ir.ui.view">
+            <field name="name">จัดการระบบภายนอก</field>
+            <field name="model">mt.system</field>
+            <field name="arch" type="xml">
+                <tree string="จัดการระบบภายนอก">
+                    <field name="system_code"/>
+                    <field name="system_name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="mt_system_view_form" model="ir.ui.view">
+            <field name="name">จัดการระบบภายนอก</field>
+            <field name="model">mt.system</field>
+            <field name="arch" type="xml">
+                <form string="จัดการระบบภายนอก">
+                    <sheet>
+                        <group>
+                            <field name="system_code"/>
+                            <field name="system_name"/>
+                            <field name="system_url"/>
+                            <field name="api_key"/>
+                            <field name="api_webhook"/>
+                            <field name="api_create"/>
+                            <field name="url_create"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="mt_system_action" model="ir.actions.act_window">
+            <field name="name">จัดการระบบภายนอก</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mt.system</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <!-- This Menu Item must have a parent and an action -->
+        <menuitem id="mt_system_menu" name="จัดการระบบภายนอก" parent="menu_meeting_master" action="mt_system_action"
+                  sequence="11"/>
+    </data>
+</odoo>
