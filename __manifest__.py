@@ -30,7 +30,8 @@
         'views/attendee_vote_choice_view.xml',
         'views/mt_system.xml',
         'data/mail_template.xml',
-        'views/meeting_notify_view.xml'
+        'views/meeting_notify_view.xml',
+        'views/mdm_organize_vew.xml'
 
     ],
     'demo': [''],

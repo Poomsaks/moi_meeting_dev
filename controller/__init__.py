@@ -20,3 +20,5 @@ from . import con_meeting_agenda
 from . import con_meeting_notify
 from . import con_dashboard
 from . import config_database
+
+from . import con_organize

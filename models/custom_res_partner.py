@@ -33,6 +33,11 @@ class CustomResPartner(models.Model):
         selection=[('C', 'ส่วนกลาง'), ('R', 'ส่วนภูมิภาค')],
         required=False,
     )
+
+    organize_os_id = fields.Many2many(
+        comodel_name='mdm.organize',
+        string='Organize_os_id')
+
     affiliation = fields.Char(string="สังกัดฝ่าย", required=False)
 
     meeting_count = fields.Integer("การประชุม", compute='_compute_meeting_count')

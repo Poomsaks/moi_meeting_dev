@@ -1,8 +1,12 @@
 import calendar
+import traceback
 import uuid
+
 import requests
+
+from odoo.http import request
 from odoo import http
-from odoo.http import Controller, route, request
+
 import json
 import datetime
 from datetime import timedelta, MAXYEAR
@@ -10,6 +14,7 @@ from datetime import timedelta, MAXYEAR
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 from pytz import timezone
 from .config_database import ConfigDatabase
+
 
 class ConMeetingOS(http.Controller):
     url_host = 'http://172.21.200.39:8082'
@@ -119,6 +124,7 @@ class ConMeetingOS(http.Controller):
             return None
 
     def add_os_user_none_profile(self, profile):
+        request.session.db = ConfigDatabase.database
         username = profile['username']
         email = profile['email']
         name = profile['name']
@@ -126,13 +132,8 @@ class ConMeetingOS(http.Controller):
         ref_id = profile['refId']
         position_name = profile['positionName']
         db_authen = ConfigDatabase.database
-        login_check = request.env['res.users'].sudo().search([('login', '=', username)])
+        login_check = http.request.env['res.users'].sudo().search([('login', '=', username)], limit=1)
         if login_check:
-            request.session.authenticate(db_authen, email, "1234")
-            return request.env['ir.http'].session_info()
-        # existing_user = request.env['res.users'].sudo().search([('login', '=', username)])
-        if login_check:
-            login_check.ensure_one()
             data = {'status': 200, 'response': login_check.id, 'message': 'User already exists'}
             return data
         else:
@@ -152,6 +153,59 @@ class ConMeetingOS(http.Controller):
                 users_info.ensure_one()
                 response_return = []
                 if users_info:
+                    if profile.get('organization'):
+                        data_organization = request.env['mdm.organize'].sudo().search(
+                            [('code', '=', profile.get('organization').get('code'))])
+                        if not data_organization:
+                            level = profile.get('organization').get('level')
+                            if level == 'กระทรวง':
+                                level_id = 1
+                            elif level == 'สำนัก' or level == 'กรม':
+                                level_id = 2
+                            elif level == 'กอง':
+                                level_id = 3
+                            else:
+                                level_id = 0
+                            data_organization.create({
+                                'code': profile.get('organization').get('code'),
+                                'ref_code': profile.get('organization').get('refCode'),
+                                'ref_level_code': profile.get('organization').get('refLevelCode'),
+                                'name': profile.get('organization').get('name'),
+                                'full_name': profile.get('organization').get('fullName'),
+                                'name_en': profile.get('organization').get('nameEn'),
+                                'full_name_en': profile.get('organization').get('fullNameEn'),
+                                'level': profile.get('organization').get('level'),
+                                'level_id': level_id
+                            })
+                        if profile.get('organization').get('organizationsParent'):
+                            organizations_parent_data = json.loads(
+                                json.dumps(profile.get('organization').get('organizationsParent')))
+                            data_organization_parent = request.env['mdm.organize'].sudo()
+                            for rec_parent in organizations_parent_data:
+                                data_organization_parent = data_organization_parent.search(
+                                    [('code', '=', rec_parent.get('code'))])
+                                if not data_organization_parent:
+                                    level = rec_parent.get('level')
+                                    if level == 'กระทรวง':
+                                        level_id = 1
+                                    elif level == 'สำนัก' or level == 'กรม':
+                                        level_id = 2
+                                    elif level == 'กอง':
+                                        level_id = 3
+                                    else:
+                                        level_id = 0
+                                    organization_parent_data = {
+                                        'code': rec_parent.get('code'),
+                                        'ref_code': rec_parent.get('refCode'),
+                                        'ref_level_code': rec_parent.get('refLevelCode'),
+                                        'name': rec_parent.get('name'),
+                                        'full_name': rec_parent.get('fullName'),
+                                        'name_en': rec_parent.get('nameEn'),
+                                        'full_name_en': rec_parent.get('fullNameEn'),
+                                        'level': rec_parent.get('level'),
+                                        'level_id': level_id,
+                                    }
+                                    data_organization_parent.create(organization_parent_data)
                     partner_info = request.env['res.partner'].sudo().search([('id', '=', users_info.partner_id.id)])
                     partner_info.write({
                         'id': partner_info.id,
@@ -175,54 +229,51 @@ class ConMeetingOS(http.Controller):
 
     @http.route('/api/meeting/ext/create_meeting', type='json', auth='none', csrf=False)
     def create_meeting(self, **post):
-        request.session.db = 'moi_meeting_dev'
-        if self.os_auth_integrate_service_valid_token(post.get('requester_code')):
-            profile_os = self.os_auth_profile(self.os_auth_integrate_service_valid_token(post.get('requester_code')))
-            username = profile_os['username']
-            email = profile_os['email']
-            name = profile_os['name']
-            code = profile_os['code']
-            ref_id = profile_os['refId']
-            db_authen = ConfigDatabase.database
-            login_check = request.env['res.users'].sudo().search([('login', '=', username)])
-            print(login_check)
-            # if self.add_os_user_none_profile(profile_os).get('status') == 200:
-            #     data_model = request.env['calendar.event']
-            #     data_create = data_model.create({
-            #         'requester_code': profile_os['code'],
-            #         'name': post.get('name'),
-            #         'description': post.get('description'),
-            #         'ref_id': post.get('ref_id'),
-            #     })
-            #     if post.get('attendee_ids'):
-            #         attendee_list = []
-            #         for rec in post.get('attendee_ids'):
-            #             data_partner = request.env['res.partner'].search(
-            #                 [('attendee_code', '=', rec.get('attendee_code'))], limit=1)
-            #             if data_partner:
-            #                 attendee_list.append((0, 0, {
-            #                     'event_id': data_create.id,
-            #                     'position_id': rec.get('position_id'),
-            #                     'partner_id': data_partner.id,
-            #                     'attendee_code': rec.get('attendee_code')
-            #                 }))
-            #         data_create.write({
-            #             'attendee_ids': attendee_list,
-            #         })
-            #     response_list = {
-            #         'meeting_id': data_create.id,
-            #         'create_date': data_create.create_date
-            #     }
-            #     data = {'status': 200, 'response': response_list, 'message': 'success'}
-            #     self.send_status_meeting(response_list)
-            #     return data
-            # else:
-            #     data = {'status': 500, 'response': 'ไม่พบข้อมูล', 'message': 'error'}
-            #     return data
+        request.session.db = ConfigDatabase.database
+        # if self.os_auth_integrate_service_valid_token(post.get('requester_code')):
+        # self.os_auth_integrate_service_valid_token(post.get('requester_code'))
+        profile_os = self.os_auth_profile(post.get('requester_code'))
+        if profile_os:
+            if self.add_os_user_none_profile(profile_os).get('status') == 200:
+                data_model = request.env['calendar.event'].sudo().search([], limit=1)
+                data_create = data_model.create({
+                    'requester_code': profile_os['code'],
+                    'name': post.get('name'),
+                    'description': post.get('description'),
+                    'ref_id': post.get('ref_id'),
+                })
+                if post.get('attendee_ids'):
+                    attendee_list = []
+                    for rec in post.get('attendee_ids'):
+                        data_partner = request.env['res.partner'].sudo().search(
+                            [('attendee_code', '=', rec.get('attendee_code'))], limit=1)
+                        if data_partner:
+                            attendee_list.append((0, 0, {
+                                'event_id': data_create.id,
+                                'position_id': rec.get('position_id'),
+                                'partner_id': data_partner.id,
+                                'attendee_code': rec.get('attendee_code')
+                            }))
+                    data_create.write({
+                        'attendee_ids': attendee_list,
+                    })
+                response_list = {
+                    'meeting_id': data_create.id,
+                    'create_date': data_create.create_date
+                }
+                data = {'status': 200, 'response': response_list, 'message': 'success'}
+                self.send_status_meeting(response_list)
+                return data
+            else:
+                data = {'status': 500, 'response': 'ไม่พบข้อมูล ผู้ใช้งาน', 'message': 'error'}
+                return data
+        else:
+            data = {'status': 500, 'response': 'ไม่พบข้อมูล requester_code', 'message': 'error'}
+            return data
 
     @http.route('/api/meeting/ext/update_status_attendee', type='json', auth='none')
     def update_status_attendee(self, **post):
-        request.session.db = post.get('db')
+        request.session.db = ConfigDatabase.database
         data_event = request.env['calendar.event'].sudo().search([('id', '=', post.get('meeting_id'))])
         data_model = request.env['calendar.attendee'].sudo().search([
             ('event_id', '=', data_event.id),
@@ -352,6 +403,7 @@ class ConMeetingOS(http.Controller):
 
     @http.route('/api/meeting/ext/get_meeting_all_by_id', type='json', auth='none')
     def get_meeting_all_by_id(self, **post):
+        request.session.db = ConfigDatabase.database
         ICT = timezone('Asia/Bangkok')
         meeting = request.env['calendar.event'].sudo().search([('id', '=', post.get('meeting_id'))])
         if meeting:
@@ -674,7 +726,64 @@ class ConMeetingOS(http.Controller):
         response = requests.get(url, headers=headers, json=data)
         if response.status_code == 200:
             access_token = response.json().get('profile')
-            return access_token
+            code = ""
+            email = ""
+            name = ""
+            refId = ""
+            positionName = ""
+            profile_data = access_token
+            if profile_data:
+                code = profile_data.get('code')
+                email = profile_data.get('email')
+                name = profile_data.get('name')
+                refId = profile_data.get('refId')
+                positionName = profile_data.get('positionName')
+                username = profile_data.get('username')
+                usernameRef = profile_data.get('usernameRef')
+
+            login_check = request.env['res.users'].sudo().search([('login', '=', email)])
+            if login_check:
+                login_check.ensure_one()
+                data = {'status': 200, 'partner_id': login_check.partner_id.id, 'profile': access_token,
+                        'message': 'success'}
+                return data
+            else:
+                web_company = request.env['res.company'].sudo().search([('id', '=', 1)])
+                new_user = request.env['res.users'].with_company(web_company).sudo().create({
+                    'name': name,
+                    'login': email,
+                    'company_id': web_company.id
+                })
+                if not new_user:
+                    data = {'status': 400,
+                            'message': 'เกิดข้อผิดพลาดจาก server ไม่สามารถทำรายการได้ กรุณาลองใหม่อีกครั้ง'}
+                    return data
+
+                else:
+                    users_info = request.env['res.users'].sudo().search([('id', '=', new_user.id)])
+                    users_info.ensure_one()
+                    response_return = []
+                    partner_info = []
+                    if users_info:
+                        partner_info = request.env['res.partner'].sudo().search([('id', '=', users_info.partner_id.id)])
+                        partner_info.write({
+                            'id': partner_info.id,
+                            'name': name,
+                            'email': email,
+                            'attendee_code': code,
+                            'personal_code': refId,
+                            'position_name': positionName
+                        })
+                        # response_return = {
+                        #     'partner_id': partner_info.id,
+                        #     'name': name,
+                        #     'email': email,
+                        #     'attendee_code': code,
+                        #     'personal_code': refId,
+                        #     'position_name': positionName
+                        # }
+                    data = {'status': 200, 'partner_id': partner_info.id, 'profile': access_token, 'message': 'success'}
+                    return data
         else:
             print("Failed to get access token")
             return None

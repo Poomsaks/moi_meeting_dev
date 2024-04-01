@@ -119,3 +119,4 @@ class ControllerMeetingLogSing(http.Controller):
         })
         data = {'status': 200, 'response': data_model.id, 'message': 'success'}
         return json.dumps(data)
+

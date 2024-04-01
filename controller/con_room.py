@@ -68,6 +68,71 @@ class ConRoom(http.Controller):
                     'type_meeting_id': rec.type_meeting_id.id,
                     'equipment_ids': equipment_info,
                     'services_ids': services_info,
+
+                    'organize_os_id': rec.organize_os_id.id,
+                }
+                data_s.append(vals)
+        data = {'status': 200, 'response': data_s, 'message': 'success'}
+        return data
+
+    @http.route('/api/meeting/get_room_by_organize_id', type='json', auth='none')
+    def get_room_by_organize_id(self, **post):
+        request.session.db = post.get('db')
+        data_info = request.env['mt.room'].sudo().search([('organize_os_id', '=', post.get('organize_os_id'))])
+        data_s = []
+        if not data_info:
+            data = {'status': 500, 'response': 'ไม่พบข้อมูล', 'message': 'error'}
+            return data
+        for room in data_info:
+            # TODO equipment
+            equipment_rec = request.env['mt.room.equipment'].sudo().search([('room_id', '=', room.id)])
+            equipment_info = {
+                "counter": len(equipment_rec),
+                "equipment_ids": []
+            }
+            for equipment in equipment_rec:
+                equipment_info['equipment_ids'].append({
+                    'id': equipment.id or None,
+                    'room_id': equipment.room_id.id or None,
+                    'equipment_id': equipment.equipment_id.id or None,
+                    'equipment_unit': equipment.equipment_unit or None,
+                    'equipment_qty': equipment.equipment_qty or None,
+                })
+            # TODO services
+            services_rec = request.env['mt.room.services'].sudo().search([('room_id', '=', room.id)])
+            services_info = {
+                "counter": len(services_rec),
+                "services_ids": []
+            }
+            for services in services_rec:
+                services_info['services_ids'].append({
+                    'id': services.id or None,
+                    'room_id': services.room_id.id or None,
+                    'service_id': services.service_id.id or None,
+                    'service_type': services.service_type or None,
+                    'service_unit': services.service_unit or None,
+                    'service_qty': services.service_qty or None,
+                })
+
+            for rec in room:
+                vals = {
+                    'id': rec.id,
+                    'room_name': rec.room_name,
+                    'floor': rec.floor,
+                    'people_in_room': rec.people_in_room,
+                    'room_address': rec.room_address,
+                    'access_type': rec.access_type,
+                    'room_type': rec.room_type,
+                    'organize_id': rec.organize_id,
+                    'organize_type': rec.organize_type,
+                    'meeting_color': rec.meeting_color,
+                    # 'room_status': rec.room_status,
+                    'active': rec.active,
+                    'type_meeting_id': rec.type_meeting_id.id,
+                    'equipment_ids': equipment_info,
+                    'services_ids': services_info,
+
+                    'organize_os_id': rec.organize_os_id.id,
                 }
                 data_s.append(vals)
         data = {'status': 200, 'response': data_s, 'message': 'success'}
@@ -93,6 +158,7 @@ class ConRoom(http.Controller):
             'meeting_color': post.get('meeting_color'),
             'active': post.get('active', True),
             'partner_id': post.get('partner_id'),
+            'organize_os_id': post.get('organize_os_id'),
         })
         data = {'status': 200, 'response': data_create.id, 'message': 'success'}
         return data
@@ -164,7 +230,8 @@ class ConRoom(http.Controller):
                     'active': rec.active,
                     'meeting_color': rec.meeting_color,
                     'equipment_ids': data_equipment,
-                    'services_ids': data_service
+                    'services_ids': data_service,
+                    'organize_os_id': rec.organize_os_id.id,
                 }
                 data_rec.append(vals)
 
@@ -196,6 +263,7 @@ class ConRoom(http.Controller):
                 'meeting_color': post.get('meeting_color', data_model.meeting_color),
                 'active': post.get('active', True),
                 'partner_id': post.get('partner_id'),
+                'organize_os_id': post.get('organize_os_id'),
             })
             data = {'status': 200, 'response': data_model.id, 'message': 'success'}
             return data

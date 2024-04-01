@@ -29,3 +29,5 @@ from . import mdm_attendee_vote_choice
 
 from . import mt_system
 from . import meeting_notify
+
+from . import mdm_organize

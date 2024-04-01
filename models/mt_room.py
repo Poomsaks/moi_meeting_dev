@@ -13,6 +13,11 @@ class MtRoom(models.Model):
     image = fields.Binary(string="รูป", attachment=True, )
     room_address = fields.Text(string="ที่อยู่ห้องประชุม", required=False)
     meeting_color = fields.Char(string="สีห้องประชุม", required=False)
+
+    organize_os_id = fields.Many2one(
+        comodel_name='mdm.organize',
+        string='Organize_os_id')
+
     access_type = fields.Selection(
         string="รูปแบบห้องประชุม (Public/Private)",
         selection=[('public', 'ห้องประชุม Public'), ('private', 'ห้องประชุม Private')],

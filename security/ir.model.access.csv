@@ -4,7 +4,7 @@ mt.equipment,mt.equipment,model_mt_equipment,base.group_user,1,1,1,1
 mt.agenda,mt.agenda,model_mt_agenda,base.group_user,1,1,1,1
 mt.type.vote,mt.type.vote,model_mt_type_vote,base.group_user,1,1,1,1
 common.agenda.vote,common.agenda.vote,model_common_agenda_vote,base.group_user,1,1,1,1
-calendar.event,calendar.event,model_calendar_event,base.group_user,1,1,1,1
+calendar.event,calendar.event,model_calendar_event,base.group_public,1,1,1,1
 mt.room.equipment,mt.room.equipment,model_mt_room_equipment,base.group_user,1,1,1,1
 mt.room.services,mt.room.services,model_mt_room_services,base.group_user,1,1,1,1
 mt.service,mt.service,model_mt_service,base.group_user,1,1,1,1
@@ -27,6 +27,7 @@ agenda.vote.secret,agenda.vote.secret,model_agenda_vote_secret,base.group_user,1
 
 config.url,config.url,model_config_url,base.group_user,1,1,1,1
 res.users,res.users,model_res_users,base.group_user,1,1,1,1
+res.users.public,res.users.public,model_res_users,base.group_public,1,1,1,1
 uom.uom,uom.uom,model_uom_uom,base.group_user,1,1,1,1
 meeting.gen.code,meeting.gen.code,model_meeting_gen_code,base.group_user,1,1,1,1
 
@@ -50,8 +51,14 @@ meeting.equipment,meeting.equipment,model_meeting_equipment,base.group_user,1,1,
 meeting.services,meeting.services,model_meeting_services,base.group_user,1,1,1,1
 meeting.attach,meeting.attach,model_meeting_attach,base.group_user,1,1,1,1
 
-mdm.position,mdm.position,model_mdm_position,base.group_user,1,1,1,1
+mdm.position,mdm.position,model_mdm_position,base.group_public,1,1,1,1
 attendee.agenda,attendee.agenda,model_attendee_agenda,base.group_user,1,1,1,1
 attendee.vote.choice,attendee.vote.choice,model_attendee_vote_choice,base.group_user,1,1,1,1
 
-mail.activity.type,mail.activity.type,mail.model_mail_activity_type,base.group_user,1,1,1,1
+mt_system,mt_system,model_mt_system,,1,1,1,1
+meeting.agenda.personal.note,meeting.agenda.personal.note,model_meeting_agenda_personal_note,,1,1,1,1
+meeting.notify,meeting.notify,model_meeting_notify,,1,1,1,1
+
+mail.activity.type,mail.activity.type,mail.model_mail_activity_type,,1,1,1,1
+
+mdm.organize,mdm.organize,model_mdm_organize,,1,1,1,1
